@@ -1,0 +1,129 @@
+
+.paper-header.yellow .left-action .icon .bar,
+.paper-header.amber .left-action .icon .bar,
+.paper-header.light-gray .left-action .icon .bar,
+.paper-header.white .left-action .icon .bar{
+    background-color: black;
+}
+
+.theme-red .paper-header{
+    background-color: #F44336;
+    color: white;
+}
+
+.theme-pink .paper-header{
+    background-color: #E91E63;
+    color: white;
+}
+
+.theme-purple .paper-header{
+    background-color: #9C27B0;
+    color: white;
+}
+
+.theme-deep-purple .paper-header{
+    background-color: #673AB7;
+    color: white;
+}
+
+.theme-indigo .paper-header{
+    background-color: #3F51B5;
+    color: white;
+}
+
+.theme-blue .paper-header{
+    background-color: #2196F3;
+    color: white;
+}
+
+.theme-light-blue .paper-header{
+    background-color: #03A9F4;
+    color: white;
+}
+
+.theme-cyan .paper-header{
+    background-color: #00BCD4;
+    color: white;
+}
+
+.theme-teal .paper-header{
+    background-color: #009688;
+    color: white;
+}
+
+.theme-green .paper-header{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.theme-light-green .paper-header{
+    background-color: #8BC34A;
+    color: white;
+}
+
+.theme-lime .paper-header{
+    background-color: #CDDC39;
+    color: white;
+}
+
+.theme-yellow .paper-header{
+    background-color: #FFEB3B;
+    color: black;
+}
+
+.theme-amber .paper-header{
+    color: black;
+    background-color: #FFC107;
+}
+
+.theme-orange .paper-header{
+    background-color: #FF9800;
+    color: white;
+}
+
+.theme-deep-orange .paper-header{
+    background-color: #FF5722;
+    color: white;
+}
+
+.theme-brown .paper-header{
+    background-color: #795548;
+    color: white;
+}
+
+.theme-gray .paper-header{
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.theme-dark-gray .paper-header{
+    background-color: #333333;
+    color: white;
+}
+
+.theme-light-gray .paper-header{
+    background-color: #CCCCCC;
+    color: black;
+}
+
+.theme-blue-gray .paper-header{
+    background-color: #607D8B;
+    color: white;
+}
+
+.theme-black .paper-header{
+    background-color: black;
+    color: white;
+}
+
+.theme-white .paper-header{
+    background-color: white;
+    color: black;
+}
+
+.theme-yellow .paper-header .left-action .icon .bar,
+.theme-amber .paper-header .left-action .icon .bar,
+.theme-light-gray .paper-header .left-action .icon .bar,
+.theme-white .paper-header .left-action .icon .bar{
+    background-color: black;
+}

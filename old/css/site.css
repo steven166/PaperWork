@@ -1,0 +1,39 @@
+﻿body {
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", Arial, sans-serif;
+
+    background-color: #808080;
+    background-color: rgb(204,204,204);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.paper-header #download_button{
+    color: #EEFF41;
+}
+
+.paper-header #download_button:hover{
+    color: #F1FF61;
+}
+
+.paper-header.large #download_button{
+    color: rgb(52, 52, 52);
+    background-color: #EEFF41;
+}
+
+.paper-header.large #download_button:hover{
+    color: rgb(100, 100, 100);
+    background-color: #F1FF61;
+}
+
+.code-block{
+    margin-top: 20px;
+    font-weight: bold;
+}

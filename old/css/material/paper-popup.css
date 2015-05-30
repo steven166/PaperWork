@@ -1,0 +1,111 @@
+.paper-popup-action {
+    position: relative;
+}
+
+.paper-popup-overview {
+    position: fixed;
+    z-index: 50;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.paper-popup {
+    display: inline-block;
+    position: absolute;
+    z-index: 50;
+    left: 0px;
+    min-width: 250px;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2), 0px 3px 6px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    transition: opacity 0.1s cubic-bezier(.4,0,.2,1), height 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+.paper-popup.tmp {
+    display: inline-block;
+    opacity: 0;
+    height: 0 !important;
+}
+
+.paper-popup.hidden {
+    display: none;
+    opacity: 0;
+    height: 0 !important;
+}
+
+.paper-popup.right {
+    left: initial;
+    right: 0px;
+}
+
+.paper-popup.page {
+    padding: 20px;
+}
+
+.paper-popup ul {
+    position: relative;
+    top: 0px;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    list-style: none;
+    transition: top 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+.paper-popup.tmp ul, .paper-popup.hidden ul {
+    top: -100px;
+}
+
+.paper-popup li {
+    position: relative;
+    height: 50px;
+    padding: 10px;
+    padding-top: 12px;
+    padding-left: 15px;
+    font-size: 18px;
+    color: rgb(150,150,150);
+}
+
+.paper-popup li.active {
+    color: rgb(30,30,30);
+    cursor: pointer;
+}
+
+.paper-popup li.active:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.paper-popup li.separator {
+    height: 1px;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ECECEC;
+}
+
+.paper-popup li i {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    top: -2px;
+    margin-right: 5px;
+    font-size: 30px;
+    vertical-align: middle;
+}
+
+.paper-popup li a {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 10px;
+    padding-top: 12px;
+    padding-left: 15px;
+    color: inherit;
+    text-decoration: none;
+}

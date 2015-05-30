@@ -1,0 +1,117 @@
+@media (min-width: 599px){
+
+    .paper-list.active-red .paper-list-header.active{
+        background-color: #F44336;
+        color: white;
+    }
+
+    .paper-list.active-pink .paper-list-header.active{
+        background-color: #E91E63;
+        color: white;
+    }
+
+    .paper-list.active-purple .paper-list-header.active{
+        background-color: #9C27B0;
+        color: white;
+    }
+
+    .paper-list.active-deep-purple .paper-list-header.active{
+        background-color: #673AB7;
+        color: white;
+    }
+
+    .paper-list.active-indigo .paper-list-header.active{
+        background-color: #3F51B5;
+        color: white;
+    }
+
+    .paper-list.active-blue .paper-list-header.active{
+        background-color: #2196F3;
+        color: white;
+    }
+
+    .paper-list.active-light-blue .paper-list-header.active{
+        background-color: #03A9F4;
+        color: white;
+    }
+
+    .paper-list.active-cyan .paper-list-header.active{
+        background-color: #00BCD4;
+        color: white;
+    }
+
+    .paper-list.active-teal .paper-list-header.active{
+        background-color: #009688;
+        color: white;
+    }
+
+    .paper-list.active-green .paper-list-header.active{
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .paper-list.active-light-green .paper-list-header.active{
+        background-color: #8BC34A;
+        color: white;
+    }
+
+    .paper-list.active-lime .paper-list-header.active{
+        background-color: #CDDC39;
+        color: black;
+    }
+
+    .paper-list.active-yellow .paper-list-header.active{
+        background-color: #FFEB3B;
+        color: black;
+    }
+
+    .paper-list.active-amber .paper-list-header.active{
+        color: black;
+        background-color: #FFC107;
+    }
+
+    .paper-list.active-orange .paper-list-header.active{
+        background-color: #FF9800;
+        color: white;
+    }
+
+    .paper-list.active-deep-orange .paper-list-header.active{
+        background-color: #FF5722;
+        color: white;
+    }
+
+    .paper-list.active-brown .paper-list-header.active{
+        background-color: #795548;
+        color: white;
+    }
+
+    .paper-list.active-gray .paper-list-header.active{
+        background-color: #9E9E9E;
+        color: white;
+    }
+
+    .paper-list.active-dark-gray .paper-list-header.active{
+        background-color: #333333;
+        color: white;
+    }
+
+    .paper-list.active-gray .paper-list-header.active{
+        background-color: #CCCCCC;
+        color: black;
+    }
+
+    .paper-list.active-blue-gray .paper-list-header.active, .blue-gray-500{
+        background-color: #607D8B;
+        color: white;
+    }
+
+    .paper-list.active-black .paper-list-header.active{
+        background-color: black;
+        color: white;
+    }
+
+    .paper-list.active-white .paper-list-header.active{
+        background-color: white;
+        color: black;
+    }
+}

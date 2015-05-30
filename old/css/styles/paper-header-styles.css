@@ -1,0 +1,197 @@
+.paper-header.red{
+    background-color: #F44336;
+}
+
+.paper-header.pink{
+    background-color: #E91E63;
+}
+
+.paper-header.purple{
+    background-color: #9C27B0;
+}
+
+.paper-header.deep-purple{
+    background-color: #673AB7;
+}
+
+.paper-header.indigo{
+    background-color: #3F51B5
+}
+
+.paper-header.blue{
+    background-color: #2196F3;
+}
+
+.paper-header.light-blue{
+    background-color: #03A9F4;
+}
+
+.paper-header.cyan{
+    background-color: #00BCD4;
+}
+
+.paper-header.teal{
+    background-color: #009688;
+}
+
+.paper-header.green{
+    background-color: #4CAF50;
+}
+
+.paper-header.light-green{
+    background-color: #8BC34A;
+}
+
+.paper-header.lime{
+    background-color: #CDDC39;
+}
+
+.paper-header.yellow{
+    background-color: #FFEB3B;
+}
+
+.paper-header.amber{
+    background-color: #FFC107;
+}
+
+.paper-header.orange{
+    background-color: #FF9800;
+}
+
+.paper-header.deep-orange{
+    background-color: #FF5722;
+}
+
+.paper-header.brown{
+    background-color: #795548;
+}
+
+.paper-header.gray{
+    background-color: #9E9E9E;
+}
+
+.paper-header.light-gray{
+    background-color: #CCCCCC;
+}
+
+.paper-header.dark-gray{
+    background-color: #333333;
+}
+
+.paper-header.blue-gray{
+    background-color: #607D8B;
+}
+
+.paper-header.black{
+    background-color: black;
+}
+
+.paper-header.white{
+    background-color: white;
+}
+
+.paper-header.red .paper-header-content a, .paper-header.red .paper-header-menu-button,
+.paper-header.pink .paper-header-content a, .paper-header.pink .paper-header-menu-button,
+.paper-header.purple .paper-header-content a, .paper-header.purple .paper-header-menu-button,
+.paper-header.deep-purple .paper-header-content a, .paper-header.deep-purple .paper-header-menu-button,
+.paper-header.indigo .paper-header-content a, .paper-header.indigo .paper-header-menu-button,
+.paper-header.blue .paper-header-content a, .paper-header.blue .paper-header-menu-button{
+    color: #EEE;
+}
+.paper-header.light-blue .paper-header-content a, .paper-header.light-blue .paper-header-menu-button,
+.paper-header.cyan .paper-header-content a, .paper-header.cyan .paper-header-menu-button,
+.paper-header.teal .paper-header-content a, .paper-header.teal .paper-header-menu-button,
+.paper-header.green .paper-header-content a, .paper-header.green .paper-header-menu-button,
+.paper-header.light-green .paper-header-content a, .paper-header.light-green .paper-header-menu-button,
+.paper-header.orange .paper-header-content a, .paper-header.orange .paper-header-menu-button{
+    color: #EEE;
+}
+.paper-header.deep-orange .paper-header-content a, .paper-header.deep-orange .paper-header-menu-button,
+.paper-header.brown .paper-header-content a, .paper-header.brown .paper-header-menu-button,
+.paper-header.gray .paper-header-content a, .paper-header.gray .paper-header-menu-button,
+.paper-header.dark-gray .paper-header-content a, .paper-header.dark-gray .paper-header-menu-button,
+.paper-header.blue-gray .paper-header-content a, .paper-header.blue-gray .paper-header-menu-button,
+.paper-header.black .paper-header-content a, .paper-header.black .paper-header-menu-button{
+    color: #EEE;
+}
+
+.paper-header.lime .paper-header-content a,
+.paper-header.yellow .paper-header-content a,
+.paper-header.amber .paper-header-content a,
+.paper-header.light-gray .paper-header-content a,
+.paper-header.white .paper-header-content a{
+    color: #333333;
+}
+
+.paper-header.lime .paper-header-menu-button,
+.paper-header.yellow .paper-header-menu-button,
+.paper-header.amber .paper-header-menu-button,
+.paper-header.light-gray .paper-header-menu-button,
+.paper-header.white .paper-header-menu-button{
+    color: rgb(120,120,120);
+}
+
+.paper-header.red .paper-header-content a:hover, .paper-header.red .paper-header-menu-button:hover,
+.paper-header.pink .paper-header-content a:hover, .paper-header.pink .paper-header-menu-button:hover,
+.paper-header.purple .paper-header-content a:hover, .paper-header.purple .paper-header-menu-button:hover{
+    color: white;
+}
+.paper-header.deep-purple .paper-header-content a:hover, .paper-header.deep-purple .paper-header-menu-button:hover,
+.paper-header.indigo .paper-header-content a:hover, .paper-header.indigo .paper-header-menu-button:hover,
+.paper-header.blue .paper-header-content a:hover, .paper-header.blue .paper-header-menu-button:hover{
+    color:white;
+}
+.paper-header.light-blue .paper-header-content a:hover, .paper-header.light-blue .paper-header-menu-button:hover,
+.paper-header.cyan .paper-header-content a:hover, .paper-header.cyan .paper-header-menu-button:hover,
+.paper-header.teal .paper-header-content a:hover, .paper-header.teal .paper-header-menu-button:hover{
+    color: white;
+}
+.paper-header.green .paper-header-content a:hover, .paper-header.green .paper-header-menu-button:hover,
+.paper-header.light-green .paper-header-content a:hover, .paper-header.light-green .paper-header-menu-button:hover,
+.paper-header.orange .paper-header-content a:hover, .paper-header.orange .paper-header-menu-button:hover{
+    color: white;
+}
+.paper-header.deep-orange .paper-header-content a:hover, .paper-header.deep-orange .paper-header-menu-button:hover,
+.paper-header.brown .paper-header-content a:hover, .paper-header.brown .paper-header-menu-button:hover,
+.paper-header.gray .paper-header-content a:hover, .paper-header.gray .paper-header-menu-button:hover{
+    color: white;
+}
+.paper-header.dark-gray .paper-header-content a:hover, .paper-header.dark-gray .paper-header-menu-button:hover,
+.paper-header.blue-gray .paper-header-content a:hover, .paper-header.blue-gray .paper-header-menu-button:hover,
+.paper-header.black .paper-header-content a:hover, .paper-header.black .paper-header-menu-button:hover{
+    color: white;
+}
+
+.paper-header.lime .paper-header-content a:hover,
+.paper-header.yellow .paper-header-content a:hover,
+.paper-header.amber .paper-header-content a:hover,
+.paper-header.light-gray .paper-header-content a:hover,
+.paper-header.white .paper-header-content a:hover{
+    color: black;
+}
+
+.paper-header.lime .paper-header-menu-button:hover,
+.paper-header.yellow .paper-header-menu-button:hover,
+.paper-header.amber .paper-header-menu-button:hover,
+.paper-header.light-gray .paper-header-menu-button:hover,
+.paper-header.white .paper-header-menu-button:hover{
+    color: rgb(90,90,90);
+}
+    
+.paper-header:not(.large) .paper-header-menu-right a{
+    color: rgb(51,51,51);
+}
+    
+.paper-header:not(.large) .paper-header-menu-right a:hover{
+    color: rgb(0,0,0);
+}
+
+@media (max-width: 640px) {
+    .paper-header .paper-header-menu a{
+        color: #333 !important;
+    }
+    
+    .paper-header .paper-header-menu a:hover{
+        color: black;
+    }
+}

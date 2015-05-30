@@ -1,0 +1,1 @@
+var app = paper.app.create(false, "green", "paperwork");

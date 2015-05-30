@@ -1,0 +1,122 @@
+
+.theme-red .paper-checkbox.checked .box{
+    background-color: #F44336;
+    border-color: #F44336;
+}
+
+.theme-pink .paper-checkbox.checked .box{
+    background-color: #E91E63;
+    border-color: #E91E63;
+}
+
+.theme-purple .paper-checkbox.checked .box{
+    background-color: #9C27B0;
+    border-color: #9C27B0;
+}
+
+.theme-deep-purple .paper-checkbox.checked .box{
+    background-color: #673AB7;
+    border-color: #673AB7;
+}
+
+.theme-indigo .paper-checkbox.checked .box{
+    background-color: #3F51B5;
+    border-color: #3F51B5;
+}
+
+.theme-blue .paper-checkbox.checked .box{
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.theme-light-blue .paper-checkbox.checked .box{
+    background-color: #03A9F4;
+    border-color: #03A9F4;
+}
+
+.theme-cyan .paper-checkbox.checked .box{
+    background-color: #00BCD4;
+    border-color: #00BCD4;
+}
+
+.theme-teal .paper-checkbox.checked .box{
+    background-color: #009688;
+    border-color: #009688;
+}
+
+.theme-green .paper-checkbox.checked .box{
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.theme-light-green .paper-checkbox.checked .box{
+    background-color: #8BC34A;
+    border-color: #8BC34A;
+}
+
+.theme-lime .paper-checkbox.checked .box{
+    background-color: #CDDC39;
+    border-color: #CDDC39;
+}
+
+.theme-yellow .paper-checkbox.checked .box{
+    background-color: #FFEB3B;
+    border-color: #FFEB3B;
+}
+
+.theme-amber .paper-checkbox.checked .box{
+    background-color: #FFC107;
+    border-color: #FFC107;
+}
+
+.theme-orange .paper-checkbox.checked .box{
+    background-color: #FF9800;
+    border-color: #FF9800;
+}
+
+.theme-deep-orange .paper-checkbox.checked .box{
+    background-color: #FF5722;
+    border-color: #FF5722;
+}
+
+.theme-brown .paper-checkbox.checked .box{
+    background-color: #795548;
+    border-color: #795548;
+}
+
+.theme-gray .paper-checkbox.checked .box{
+    background-color: #9E9E9E;
+    border-color: #9E9E9E;
+}
+
+.theme-dark-gray .paper-checkbox.checked .box{
+    background-color: #333333;
+    border-color: #333333;
+}
+
+.theme-light-gray .paper-checkbox.checked .box{
+    background-color: #CCCCCC;
+    border-color: #CCCCCC;
+}
+
+.theme-blue-gray .paper-checkbox.checked .box{
+    background-color: #607D8B;
+    border-color: #607D8B;
+}
+
+.theme-black .paper-checkbox.checked .box{
+    background-color: black;
+    border-color: black;
+}
+
+.theme-white .paper-checkbox.checked .box{
+    background-color: white;
+    border-color: white
+}
+
+.theme-yellow .paper-checkbox.checked .box:before,
+.theme-amber .paper-checkbox.checked .box:before,
+.theme-light-gray .paper-checkbox.checked .box:before,
+.theme-white .paper-checkbox.checked .box:before{
+    border-color: black;
+}

@@ -1,0 +1,249 @@
+.paper-list ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.paper-list .paper-list-header{
+    position: relative;
+    height: 60px;
+    width: 100%;
+
+    color: rgb(120,120,120);
+    cursor: pointer;
+
+    transition: 0.2s all cubic-bezier(.4,0,.2,1), 0.2s background-color cubic-bezier(.4,0,.2,1), 0.3s box-shadow cubic-bezier(.4,0,.2,1), 0.7s opacity cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list.hover ul{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.paper-list.hover .paper-list-header{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px 0px, rgba(0, 0, 0, 0.117647) 0px 1px 6px 0px;
+    background-color: white;
+}
+
+.paper-list .paper-list-item.toggle > .paper-list-header{
+    color: rgb(51,51,51);
+}
+
+.paper-list:not(.hover) .paper-list-header:hover{
+    background-color: rgba(204,204,204,0.5);
+}
+
+.paper-list.hover .paper-list-header:hover{
+    box-shadow: rgba(0, 0, 0, 0.227451) 0px 3px 10px 0px, rgba(0, 0, 0, 0.156863) 0px 3px 10px 0px;
+}
+
+.paper-list .paper-list-header.icon .paper-list-icon{
+    display: inline-block;
+    position: absolute;
+
+    width: 40px;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    border-radius: 100%;
+
+    transition: 0.2s all cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-header.icon .paper-list-icon i{
+    position: absolute;
+    display: inline-block;
+
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+
+    text-align: center;
+    font-size: 30px;
+    overflow: hidden;
+    transition: 0.2s all cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-header .paper-list-title{
+    display: inline-block;
+    position: absolute;
+
+    top: 20px;
+    left: 10px;
+    right: 10px;
+
+    font-size: 20px;
+    font-weight: 400;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    transition: 0.2s left cubic-bezier(.4,0,.2,1), 0.2s top cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-header.subtitle .paper-list-subtitle{
+    display: inline-block;
+    position: absolute;
+
+    top: 35px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+
+    color: rgb(150,150,150);
+
+    font-size: 12px;
+    font-weight: 400;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    transition: 0.2s all cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-header.subtitle .paper-list-title{
+    top: 10px;
+}
+
+.paper-list .paper-list-header.icon .paper-list-title,
+.paper-list .paper-list-header.icon .paper-list-subtitle{
+    left: 60px;
+}
+
+.paper-list .paper-list-header.small{
+    height: 40px;
+}
+
+.paper-list .paper-list-header.small.icon .paper-list-icon{
+    width: 30px;
+    left: 5px;
+    top: 5px;
+    bottom: 5px;
+}
+
+.paper-list .paper-list-header.small.icon .paper-list-icon i{
+    font-size: 20px;
+}
+
+.paper-list .paper-list-header.small .paper-list-title{
+    top: 10px;
+    bottom: 0px;
+    left: 10px;
+    right: 10px;
+}
+
+.paper-list .paper-list-header.small.subtitle .paper-list-subtitle{
+    opacity: 0;
+}
+
+.paper-list .paper-list-header.icon.small .paper-list-title,
+.paper-list .paper-list-header.icon.small .paper-list-title{
+    left: 40px;
+}
+
+.paper-list .paper-list-header.control .paper-list-control{
+    position: absolute;
+    display: inline-block;
+
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+
+    color: rgb(120,120,120);
+    transition: 0.2s all cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-header.control .paper-list-control > i{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding-top: 15px;
+
+    font-size: 30px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.paper-list .paper-list-header.control.active .paper-list-control{
+    color: rgb(204,204,204);
+}
+
+.paper-list .paper-list-header.control .paper-list-control:hover{
+    color: #FF9800;
+}
+
+.paper-list .paper-list-header.small.control .paper-list-control > i{
+    padding-top: 5px;
+}
+
+.paper-list .paper-list-header.control .paper-list-title,
+.paper-list .paper-list-header.control .paper-list-subtitle{
+    left: 60px;
+}
+
+.paper-list .paper-list-item.expandable > ul, .paper-list-item.expandable{
+    opacity: 1;
+
+    transition: 0.7s opacity cubic-bezier(.4,0,.2,1);
+}
+
+.paper-list .paper-list-item.expandable > ul.hidden, .paper-list-item.hidden{
+    opacity: 0;
+}
+
+.paper-list .paper-list-item.expandable > ul.hidden .paper-list-header, .paper-list-item.hidden .paper-list-header{
+    height: 0;
+}
+
+.paper-list .paper-list-header.active{
+    color: white;
+    background-color: #9E9E9E;
+}
+
+.paper-list.hover .paper-list-header.active{
+    box-shadow: rgba(0, 0, 0, 0.227451) 0px 6px 10px 0px, rgba(0, 0, 0, 0.188235) 0px 10px 30px 0px;
+}
+
+.paper-list .paper-list-header.active .paper-list-subtitle{
+    color: rgb(180,180,180);
+}
+
+.paper-list.hover .paper-list-header{
+}
+
+.paper-list .paper-list-wrap1,
+.paper-list .paper-list-wrap2,
+.paper-list .paper-list-wrap3,
+.paper-list .paper-list-wrap4{
+    position: absolute;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+.paper-list .paper-list-wrap1{
+    left:10px;
+}
+
+.paper-list .paper-list-wrap2{
+    left:20px;
+}
+
+.paper-list .paper-list-wrap3{
+    left:30px;
+}
+
+.paper-list .paper-list-wrap4{
+    left:40px;
+}

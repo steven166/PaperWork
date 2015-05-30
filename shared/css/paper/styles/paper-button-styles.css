@@ -1,0 +1,229 @@
+.theme-red .paper-button{
+    background-color: #F44336;
+    color: white;
+}
+
+.theme-pink .paper-button{
+    background-color: #E91E63;
+    color: white;
+}
+
+.theme-purple .paper-button{
+    background-color: #9C27B0;
+    color: white;
+}
+
+.theme-deep-purple .paper-button{
+    background-color: #673AB7;
+    color: white;
+}
+
+.theme-indigo .paper-button{
+    background-color: #3F51B5;
+    color: white;
+}
+
+.theme-blue .paper-button{
+    background-color: #2196F3;
+    color: white;
+}
+
+.theme-light-blue .paper-button{
+    background-color: #03A9F4;
+    color: white;
+}
+
+.theme-cyan .paper-button{
+    background-color: #00BCD4;
+    color: white;
+}
+
+.theme-teal .paper-button{
+    background-color: #009688;
+    color: white;
+}
+
+.theme-green .paper-button{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.theme-light-green .paper-button{
+    background-color: #8BC34A;
+    color: white;
+}
+
+.theme-lime .paper-button{
+    background-color: #CDDC39;
+    color: white;
+}
+
+.theme-yellow .paper-button{
+    background-color: #FFEB3B;
+    color: black;
+}
+
+.theme-amber .paper-button{
+    color: black;
+    background-color: #FFC107;
+}
+
+.theme-orange .paper-button{
+    background-color: #FF9800;
+    color: white;
+}
+
+.theme-deep-orange .paper-button{
+    background-color: #FF5722;
+    color: white;
+}
+
+.theme-brown .paper-button{
+    background-color: #795548;
+    color: white;
+}
+
+.theme-gray .paper-button{
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.theme-dark-gray .paper-button{
+    background-color: #333333;
+    color: white;
+}
+
+.theme-light-gray .paper-button{
+    background-color: #CCCCCC;
+    color: black;
+}
+
+.theme-blue-gray .paper-button{
+    background-color: #607D8B;
+    color: white;
+}
+
+.theme-black .paper-button{
+    background-color: black;
+    color: white;
+}
+
+.theme-white .paper-button{
+    background-color: white;
+    color: black;
+}
+
+.paper-button.red{
+    background-color: #F44336;
+    color: white;
+}
+
+.paper-button.pink{
+    background-color: #E91E63;
+    color: white;
+}
+
+.paper-button.purple{
+    background-color: #9C27B0;
+    color: white;
+}
+
+.paper-button.deep-purple{
+    background-color: #673AB7;
+    color: white;
+}
+
+.paper-button.indigo{
+    background-color: #3F51B5;
+    color: white;
+}
+
+.paper-button.blue{
+    background-color: #2196F3;
+    color: white;
+}
+
+.paper-button.light-blue{
+    background-color: #03A9F4;
+    color: white;
+}
+
+.paper-button.cyan{
+    background-color: #00BCD4;
+    color: white;
+}
+
+.paper-button.teal{
+    background-color: #009688;
+    color: white;
+}
+
+.paper-button.green{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.paper-button.light-green{
+    background-color: #8BC34A;
+    color: white;
+}
+
+.paper-button.lime{
+    background-color: #CDDC39;
+    color: white;
+}
+
+.paper-button.yellow{
+    background-color: #FFEB3B;
+    color: black;
+}
+
+.paper-button.amber{
+    color: black;
+    background-color: #FFC107;
+}
+
+.paper-button.orange{
+    background-color: #FF9800;
+    color: white;
+}
+
+.paper-button.deep-orange{
+    background-color: #FF5722;
+    color: white;
+}
+
+.paper-button.brown{
+    background-color: #795548;
+    color: white;
+}
+
+.paper-button.gray{
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.paper-button.dark-gray{
+    background-color: #333333;
+    color: white;
+}
+
+.paper-button.light-gray{
+    background-color: #CCCCCC;
+    color: black;
+}
+
+.paper-button.blue-gray{
+    background-color: #607D8B;
+    color: white;
+}
+
+.paper-button.black{
+    background-color: black;
+    color: white;
+}
+
+.paper-button.white{
+    background-color: white;
+    color: black;
+}

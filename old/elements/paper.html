@@ -1,0 +1,103 @@
+<h1>Paper Elements</h1>
+<p>
+    Paper elements are like in the real world "3D". 
+    This means that everything is like paper:
+    It is like a flat surface, but it can move in a 3D world and it's made of a material. 
+</p>
+<h2>Flat surface</h2>
+<p>
+    Flat surface means that a paper is always flat, it never bends or folds. 
+</p>
+<div id='e-00' class="paper round" style='width: 100px; height: 100px;'></div>
+<h2>3D world</h2>
+<p>
+    A paper element is always in a 3D world. It hovers "above" the screen.
+    So if you hold a sheet of paper above a surface you see a shadow.
+    If you move the paper up, the shadow grows bigger, and when you lower it the shadow shrinks.
+</p>
+<div id='e-01' class="paper round shadow-2 ani" style='width: 100px; height: 100px;'></div>
+<p>
+    Also if you move a sheet of paper in the real world, it does not jump from one point to anoter, it animate!
+    You should also create a natural motion of you elements, so use animations!
+    The best transition you can use is Swift Out instead of ease-in-out
+    You should rather use Swift Out than ease-in-out
+</p>
+<b>Swift Out (<code>css: cubic-bezier(.4,0,.2,1)</code>)</b>
+<div id='e-02' class="paper round ani state1" style='width: 100px; height: 100px; position: relative; left: 0px; margin-bottom: 10px; margin-top: 10px'></div>
+<b>Ease in out (<code>css: ease-in-out</code>)</b>
+<div id='e-03' class="paper round ani state1" style='width: 100px; height: 100px; position: relative; left: 0px; margin-bottom: 10px; margin-top: 10px; transition: 0.5s all ease-in-out'></div>
+<h2>It's made of a material</h2>
+<p>
+    Google's Material Design specified that every sheet of paper has 1 color, so <b>NO</b> gradians. 
+    At the "Colors" tab you can see a full list of colors you can use for you elements
+</p>
+<div id='e-04' class="paper round ani red state1" style='width: 100px; height: 100px;'></div>
+<h1>Usage</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>CSS class</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th><code>paper</code></th>
+            <td>Create transparent paper with shadow and padding</td>
+        </tr>
+        <tr>
+            <th><code>paper.round</code></th>
+            <td>Create transparent paper with shadow, padding and round borders</td>
+        </tr>
+        <tr>
+            <th><code>paper.ani</code></th>
+            <td>Add Swift Out transition to a sheet of paper</td>
+        </tr>
+        <tr>
+            <th><code>paper.ani</code></th>
+            <td>Add Swift Out transition to a sheet of paper</td>
+        </tr>
+        <tr>
+            <th><code>paper-shadow-x</code></th>
+            <td>Replace x with a number 0-5 for the size of the shadow</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    var interval1;
+    $("body").ready(function () {
+        window.clearInterval(interval1);
+        interval1 = setInterval(function () {
+            if ($("#e-01").hasClass("shadow-2")) {
+                $("#e-01").addClass("shadow-5");
+                $("#e-01").removeClass("shadow-2");
+            } else {
+                $("#e-01").addClass("shadow-2");
+                $("#e-01").removeClass("shadow-5");
+            }
+
+            if ($("#e-02, #e-03").hasClass("state1")) {
+                $("#e-02, #e-03").css("left", "150px");
+                $("#e-02, #e-03").addClass("state2");
+                $("#e-02, #e-03").removeClass("state1");
+            } else if ($("#e-02, #e-03").hasClass("state2")) {
+                $("#e-02, #e-03").css("left", "0px");
+                $("#e-02, #e-03").addClass("state1");
+                $("#e-02, #e-03").removeClass("state2");
+            }
+
+            if ($("#e-04").hasClass("state1")) {
+                $("#e-04").addClass("blue");
+                $("#e-04").removeClass("red");
+                $("#e-04").addClass("state2");
+                $("#e-04").removeClass("state1");
+            } else if ($("#e-04").hasClass("state2")) {
+                $("#e-04").addClass("red");
+                $("#e-04").removeClass("blue");
+                $("#e-04").addClass("state1");
+                $("#e-04").removeClass("state2");
+            }
+        }, 2000);
+    });
+</script>
