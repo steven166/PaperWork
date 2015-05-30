@@ -1,0 +1,26 @@
+{
+  "name": "PaperWork",
+  "version": "0.0.1",
+  "authors": [
+    "Steven Hermans <steven166@live.nl>"
+  ],
+  "description": "Create your Apps using this powerful HTML5 Framework",
+  "main": "index.php",
+  "keywords": [
+    "HTML5",
+    "JavaScript",
+    "MaterialDesign",
+	"PaperWork"
+  ],
+  "license": "MIT",
+  "homepage": "http://paperwork-js.com/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
