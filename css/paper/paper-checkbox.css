@@ -1,0 +1,121 @@
+.paper-checkbox input[type=checkbox], .paper-radio input[type=radio]{
+    display: none;
+}
+
+.paper-checkbox, .paper-radio{
+    position: relative;
+    display: block;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.paper-checkbox *, .paper-radio *{
+    cursor: pointer;
+}
+
+.paper-checkbox .paper-checkbox-label, .paper-radio .paper-radio-label{
+    position: relative;
+    display: inline-block;
+
+    margin-left: 50px;
+    padding-left: 8px;
+
+    vertical-align: middle;
+    white-space: normal;
+}
+
+.paper-checkbox .paper-checkbox-label h4, .paper-radio .paper-radio-label h4{
+    font-weight: bold;
+    margin-top: 16px;
+}
+
+.paper-checkbox .box-overlay, .paper-radio .box-overlay{
+    display: inline-block;
+    position: absolute !important;
+
+    width: 50px;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    
+    border-radius: 100%;
+}
+
+.paper-checkbox .box, .paper-radio .box{
+    display: inline-block;
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+    margin: 15px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+
+    border: 2px solid black;
+    border-radius: 2px;
+
+    transition: 0.2s all cubic-bezier(.4,0,.2,1);
+}
+
+.paper-radio .box{
+    border-radius: 100%;
+}
+
+.paper-checkbox.checked .box{
+    border-color: #4CAF50;
+    background-color: #4CAF50;
+}
+
+.paper-radio.checked .box{
+    border-color: #4CAF50;
+}
+
+.paper-checkbox .box::before{
+    content: " ";
+    display: block;
+    position: absolute;
+
+    top: 0px;
+    left: 4px;
+    width: 5px;
+    height: 10px;
+
+    border-style: solid;
+    border-top: none;
+    border-left: none;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-color: white;
+    opacity: 0;
+
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    
+    transition: 0.2s opacity cubic-bezier(.4,0,.2,1);
+}
+
+.paper-checkbox.checked .box::before{
+    opacity: 1;
+}
+
+.paper-radio .box::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    
+    background-color: #4CAF50;
+    border-radius: 100%;
+    opacity: 0;
+    
+    transition: 0.2s opacity cubic-bezier(.4,0,.2,1);
+}
+
+.paper-radio.checked .box::before{
+    opacity: 1;
+}

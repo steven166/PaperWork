@@ -1,0 +1,299 @@
+
+.red, .red-500 {
+    background-color: #F44336;
+    color: white;
+}
+
+.pink, .pink-500 {
+    background-color: #E91E63;
+    color: white;
+}
+
+.purple, .purple-500 {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.deep-purple, .deep-purple-500 {
+    background-color: #673AB7;
+    color: white;
+}
+
+.indigo, .indigo-500 {
+    background-color: #3F51B5;
+    color: white;
+}
+
+.blue, .blue-500 {
+    background-color: #2196F3;
+    color: white;
+}
+
+.light-blue, .light-blue-500 {
+    background-color: #03A9F4;
+    color: white;
+}
+
+.cyan, .cyan-500{
+    background-color: #00BCD4;
+    color: white;
+}
+
+.teal, .teal-500{
+    background-color: #009688;
+    color: white;
+}
+
+.green, .green-500{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.light-green, .light-green-500{
+    background-color: #8BC34A;
+    color: white;
+}
+
+.lime, .lim-500{
+    background-color: #CDDC39;
+    color: black;
+}
+
+.yellow, .yellow-500{
+    background-color: #FFEB3B;
+    color: black;
+}
+
+.amber, .amber-500{
+    color: black;
+    background-color: #FFC107;
+}
+
+.orange, .orange-500{
+    background-color: #FF9800;
+    color: white;
+}
+
+.deep-orange, .deep-orange-500{
+    background-color: #FF5722;
+    color: white;
+}
+
+.brown, .brown-500{
+    background-color: #795548;
+    color: white;
+}
+
+.gray, .gray-500{
+    background-color: #9E9E9E;
+    color: white;
+}
+
+.dark-gray{
+    background-color: #333333;
+    color: white;
+}
+
+.light-gray{
+    background-color: #CCCCCC;
+    color: black;
+}
+
+.blue-gray, .blue-gray-500{
+    background-color: #607D8B;
+    color: white;
+}
+
+.black{
+    background-color: black;
+    color: white;
+}
+
+.white{
+    background-color: white;
+    color: black;
+}
+
+.fg-red, .fg-red-500 {
+    color: #F44336;
+}
+
+.fg-pink, .fg-pink-500 {
+    color: #E91E63;
+}
+
+.fg-purple, .fg-purple-500 {
+    color: #9C27B0;
+}
+
+.fg-deep-purple, .fg-deep-purple-500 {
+    color: #673AB7;
+}
+
+.fg-indigo, .fg-indigo-500 {
+    color: #3F51B5;
+}
+
+.fg-blue, .fg-blue-500 {
+    color: #2196F3;
+}
+
+.fg-light-blue, .fg-light-blue-500 {
+    color: #03A9F4;
+}
+
+.fg-cyan, .fg-cyan-500{
+    color: #00BCD4;
+}
+
+.fg-teal, .fg-teal-500{
+    color: #009688;
+}
+
+.fg-green, .fg-green-500{
+    color: #4CAF50;
+}
+
+.fg-light-green, .fg-light-green-500{
+    color: #8BC34A;
+}
+
+.fg-lime, .fg-lim-500{
+    color: #CDDC39;
+}
+
+.fg-yellow, .fg-yellow-500{
+    color: #FFEB3B;
+}
+
+.fg-amber, .fg-amber-500{
+    color: #FFC107;
+}
+
+.fg-orange, .fg-orange-500{
+    color: #FF9800;
+}
+
+.fg-deep-orange, .fg-deep-orange-500{
+    color: #FF5722;
+}
+
+.fg-brown, .fg-brown-500{
+    color: #795548;
+}
+
+.fg-gray, .fg-gray-500{
+    color: #9E9E9E;
+}
+
+.fg-dark-gray{
+    color: #333333;
+}
+
+.fg-light-gray{
+    color: #CCCCCC;
+}
+
+.fg-blue-gray, .fg-blue-gray-500{
+    color: #607D8B;
+}
+
+.fg-black{
+    color: black;
+}
+
+.fg-white{
+    color: white;
+}
+
+.paper-loading.fg-red svg circle{
+    stroke: #F44336;
+}
+
+.paper-loading.fg-pink svg circle{
+    stroke: #E91E63;
+}
+
+.paper-loading.fg-purple svg circle{
+    stroke: #9C27B0;
+}
+
+.paper-loading.fg-deep-purple svg circle{
+    stroke: #673AB7;
+}
+
+.paper-loading.fg-indigo svg circle {
+    stroke: #3F51B5;
+}
+
+.paper-loading.fg-blue svg circle{
+    stroke: #2196F3;
+}
+
+.paper-loading.fg-light-blue svg circle {
+    stroke: #03A9F4;
+}
+
+.paper-loading.fg-cyan svg circle{
+    stroke: #00BCD4;
+}
+
+.paper-loading.fg-teal svg circle{
+    stroke: #009688;
+}
+
+.paper-loading.fg-green svg circle{
+    stroke: #4CAF50;
+}
+
+.paper-loading.fg-light-green svg circle{
+    stroke: #8BC34A;
+}
+
+.paper-loading.fg-lime svg circle{
+    stroke: #CDDC39;
+}
+
+.paper-loading.fg-yellow svg circle{
+    stroke: #FFEB3B;
+}
+
+.paper-loading.fg-amber svg circle{
+    stroke: #FFC107;
+}
+
+.paper-loading.fg-orange svg circle{
+    stroke: #FF9800;
+}
+
+.paper-loading.fg-deep-orange svg circle{
+    stroke: #FF5722;
+}
+
+.paper-loading.fg-brown svg circle{
+    stroke: #795548;
+}
+
+.paper-loading.fg-gray svg circle{
+    stroke: #9E9E9E;
+}
+
+.paper-loading.fg-dark-gray svg circle{
+    stroke: #333333;
+}
+
+.paper-loading.fg-light-gray svg circle{
+    stroke: #CCCCCC;
+}
+
+.paper-loading.fg-blue-gray svg circle{
+    stroke: #607D8B;
+}
+
+.paper-loading.fg-black svg circle{
+    stroke: black;
+}
+
+.paper-loading.fg-white svg circle{
+    stroke: white;
+}
