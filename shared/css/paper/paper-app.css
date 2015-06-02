@@ -42,13 +42,9 @@
 .material-app > .paper-header {
     display: inline-block;
     z-index: 3;
-    width: 230px;
+    width: 59px;
     background-color: rgba(0, 0, 0, 0);
     box-shadow: none;
-}
-
-.material-app > .paper-header .title{
-    right: 0;
 }
 
 .material-app .app-content {

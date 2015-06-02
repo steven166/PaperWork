@@ -8,8 +8,6 @@
 
     paper.wrippels = {
 
-        version: 0.01,
-
         isLightBackground: function(comp) {
             try {
                 if($(comp).attr("bg") === "light"){
@@ -20,7 +18,7 @@
                 }
 
                 var bg = $(comp).css("background-color");
-                if (bg === "transparent") {
+                if (bg === "transparent" || typeof(bg) === "undefined") {
                     return paper.wrippels.isLightBackground($(comp).parent());
                 } else if (bg.indexOf("rgba") == 0) {
                     bg = bg.substring(5, bg.length - 1);

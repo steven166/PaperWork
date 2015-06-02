@@ -7,8 +7,6 @@
 
     paper.lang = {
 
-        version: 0.02,
-
         getLanguage: function () {
             return language;
         },

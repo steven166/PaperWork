@@ -31,11 +31,6 @@
     paper.app = {
 
         /**
-         * Version of 'paper-app.js'
-         */
-        version: 0.02,
-
-        /**
          * Create new application
          * @param {string} title - Application title
          * @param {string} color - Default color of your app
@@ -121,7 +116,7 @@
                             canceled = paper.app.errorHandlers.connectionError(jqXHR, textStatus, errorThrown) === false;
                         }
                     }
-                }else if(jqXHR.status >= 400 && xhr.status < 500){
+                }else if(jqXHR.status >= 400 && jqXHR.status < 500){
                     if(typeof(paper.app.errorHandlers.connectionError) !== "undefined") {
                         canceled = paper.app.errorHandlers.connectionError(jqXHR, textStatus, errorThrown) === false;
                     }
@@ -565,8 +560,8 @@
         eActivity.appendTo(eOverlay);
         var leftAction = eActivity.children(".paper-header").children(".left-action");
         var icon = leftAction.children(".icon");
+        leftAction.children(".title").addClass("push-left");
         if(icon.length == 0){
-            leftAction.children(".title").css("left", "");
             icon = $("<div class='icon wrippels'><i></i></div>").appendTo(leftAction);
         }
         icon.children("i").attr("class", "mdi-content-clear");
@@ -791,9 +786,6 @@
             //Create activities
             var e1 = createActivity(app, group.activity_1, arg, color).appendTo(eGroup);
             var eTitle = e1.find(".paper-header .title");
-            if(eTitle.length > 0){
-                eTitle.css("left", "");
-            }
 
             var pos = "normal";
             if (typeof(group.activity_1_type) !== "undefined") {
@@ -815,11 +807,6 @@
             //Update header
 
             var leftAction = appHeader.children(".left-action");
-            var title = app.title;
-            if (typeof(group.title) !== "undefined") {
-                title = group.title;
-            }
-            app.header.setTitle(title);
             if(group.leftAction === "menu"){
                 app.header.setLeftAction(group.leftAction);
             }else if(group.leftAction === "back"){
@@ -832,7 +819,7 @@
                     app.header.setIcon(app.icon);
                 }
             }
-            paper.header.update(app.header);
+            app.header.update();
 
             //Add to DOM
             eGroup.appendTo(appContent);
@@ -914,12 +901,13 @@
                 activity.isLoaded = true;
                 content.appendTo(activityFrame);
             }
-            var hOptions = {color: color, title: activity.title, src: activity.src};
+            var hOptions = {color: color, title: activity.title, src: activity.src, pushLeft: activity.pushLeft};
             if (typeof(activity.actions) !== "undefined") {
                 hOptions.actions = activity.actions;
             }
             var header = paper.header.create(hOptions);
             paper.header.attach(header, eActivity);
+            activity.header = header;
             eActivity.children(".paper-header").addClass("fade");
 
             return eActivity;
@@ -947,6 +935,9 @@
      * @param {Activity} activity - Activity
      */
     function showActivity(activity){
+        if(activity.visible){
+            return;
+        }
         console.debug("Show Activity: " + activity.id);
         if(typeof(paper.lang) !== "undefined"){
             paper.lang.updateLanguage($("#a-" + activity.id));
@@ -967,6 +958,9 @@
      * @param {Activity} activity - Activity
      */
     function hideActivity(activity){
+        if(!activity.visible){
+            return;
+        }
         console.debug("Hide Activity: " + activity.id);
         if(typeof(activity.element) !== "undefined") {
             activity.element.children(".activity-frame").children(".activity-body").addClass("fade");
@@ -986,6 +980,9 @@
         console.debug("Destory Activity: " + activity.id);
         if(typeof(activity.onDestroy) !== "undefined"){
             activity.onDestroy();
+        }
+        if(typeof(activity.header) !== "undefined"){
+            activity.header.detach();
         }
         if(typeof(activity.element) !== "undefined") {
             activity.element.remove();
@@ -1007,6 +1004,7 @@
         if(this.isInit){
             return;
         }
+        console.info("init app");
         this.isInit = true;
         var app = this;
         appTitle = app.title;
@@ -1017,12 +1015,11 @@
         var materialApp = $("<div class='material-app fade'></div>");
         var appHeader = $("<div class='app-header'></div>").addClass(this.color).appendTo(materialApp);
         var header = paper.header.create({
-            title: app.title,
             icon: app.iconSrc,
             color: app.color
         });
-        app.header = header;
         paper.header.attach(header, materialApp);
+        app.header = header;
         var appContent = $("<div class='app-content'></div>").appendTo(materialApp);
 
         this.element = materialApp;
@@ -1034,6 +1031,11 @@
                 routingManager.update();
                 installAppListeners(app);
                 app.goToUrl(location.href, false);
+
+                if(typeof(paper.wrippels) !== "undefined"){
+                    var lightBackground = paper.wrippels.isLightBackground(appHeader);
+                    header.getElement().attr("bg", (lightBackground ? "light" : "dark"));
+                }
             }, 20);
         };
 
@@ -1065,6 +1067,18 @@
                 app.back();
             }
         });
+        document.addEventListener("visibilitychange", function(){
+            if(document.hidden) {
+                for (var i = 1; i <= 3; i++) {
+                    var activity = getCurrentActivity(app, i);
+                    if(activity != null){
+                        hideActivity(activity);
+                    }
+                }
+            }else{
+                app.updateLayout();
+            }
+        }, false);
         $("body").on("click", ".material-app > .paper-header .left-action .icon", function(){
             var groupData = getCurrentGroup(app);
             var groupName = groupData[0];
@@ -1109,6 +1123,7 @@
      */
     App.prototype.updateLayout = function(){
         console.debug("update layout");
+        var selectedActivity = 1;
         var eIcon = this.header.getElement().children(".left-action").children(".icon");
         var group = this.element.children(".app-content").children(".paper-group");
         var slots = 0;
@@ -1232,6 +1247,7 @@
                     group.parent().attr("slots", 3);
                     eActivities.eq(0).attr("pos", "xoo");
                     eActivities.eq(1).attr("pos", "oxx");
+                    selectedActivity = 2;
                 }else{
                     var activity_1 = getCurrentActivity(this, 0);
                     var activity_2 = getCurrentActivity(this, 1);
@@ -1272,6 +1288,7 @@
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
                 eActivities.eq(2).attr("pos", "oox");
+                selectedActivity = 2;
             }
 
             //Set Back icon if necessary
@@ -1323,6 +1340,7 @@
                 group.parent().attr("slots", 2);
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
+                selectedActivity = 2;
             }else if(eActivities.length == 3){
                 var activity_1 = getCurrentActivity(this, 0);
                 var activity_2 = getCurrentActivity(this, 1);
@@ -1347,6 +1365,7 @@
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
                 eActivities.eq(2).attr("pos", "oox");
+                selectedActivity = 3;
             }
 
             //Set back icon if necessary
@@ -1372,88 +1391,66 @@
             }
         }
 
-        var activity_1 = getCurrentActivity(this, 0);
-        var activity_2 = getCurrentActivity(this, 1);
-        var activity_3 = getCurrentActivity(this, 2);
-        var hideTitle = -1;
-        if(activity_3 != null){
-            if(typeof(activity_3.title) !== "undefined"){
-                var slots = group.parent().attr("slots");
-                var pos = eActivities.eq(2).attr("pos");
-                if($("body").width() >= 720 && $("body").width() < 1080){
-                    if(slots == 3 && pos === "oxx"){
-                        hideTitle = 2;
-                        eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    }
-                }else if($("body").width() < 720){
-                    if(slots == 3){
-                        hideTitle = 2;
-                        eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    }
+        var title = this.title;
+        var groupName = getCurrentGroup(this)[0];
+        var vGroup = this.activityGroups[groupName];
+        if(typeof(vGroup.title) !== "undefined"){
+            title = vGroup.title;
+        }
+
+        if(selectedActivity > 1){
+            for(var i = 1; i < selectedActivity; i++){
+                var iActivity = getCurrentActivity(this, i-1);
+                if(typeof(iActivity.title) !== "undefined"){
+                    title = iActivity.title;
                 }
             }
         }
-        if(hideTitle == -1) {
-            if (activity_2 != null) {
-                if (typeof(activity_2.title) !== "undefined") {
-                    var slots = group.parent().attr("slots");
-                    var pos = eActivities.eq(1).attr("pos");
-                    if ($("body").width() >= 720 && $("body").width() < 1080) {
-                        if (slots == 3 && pos === "oxx") {
-                            hideTitle = 1;
-                            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    } else if ($("body").width() < 720) {
-                        if (slots == 2) {
-                            hideTitle = 1;
-                            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    }
-                }
+
+        var vActivity = getCurrentActivity(this, selectedActivity-1);
+        if(typeof(vActivity.title) !== "undefined"){
+            title = vActivity.title;
+        }
+        vActivity.header.setTitle(title);
+        vActivity.header.setPushLeft(true);
+        vActivity.header.setIcon(null);
+        vActivity.header.setSource(null);
+        vActivity.header.setWrippels(true);
+        vActivity.header.update();
+        if(selectedActivity != 1){
+            var iActivity = getCurrentActivity(this, 0);
+            if(typeof(iActivity) !== "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
         }
-        if(hideTitle == -1) {
-            if (activity_1 != null) {
-                if (typeof(activity_1.title) !== "undefined") {
-                    var slots = group.parent().attr("slots");
-                    var pos = eActivities.eq(0).attr("pos");
-                    if ($("body").width() >= 1080) {
-                        hideTitle = 0;
-                        eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    } else if ($("body").width() >= 720 && $("body").width() < 1080) {
-                        if (slots < 3) {
-                            hideTitle = 0;
-                            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    } else if ($("body").width() < 720) {
-                        if (slots == 1) {
-                            hideTitle = 0;
-                            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    }
-                }
+        if(selectedActivity != 2){
+            var iActivity = getCurrentActivity(this, 1);
+            if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
         }
-        var eTitle = this.element.children(".paper-header").children(".left-action").children(".title");
-        if(hideTitle != -1){
-            eTitle.addClass("fade");
-            var showIndex1 = 0;
-            var showIndex2 = 1;
-            if(hideTitle == 0){
-                showIndex1 = 1;
-                showIndex2 = 2;
-            }else if(hideTitle == 1){
-                showIndex1 = 0;
-                showIndex2 = 2;
+        if(selectedActivity != 3){
+            var iActivity = getCurrentActivity(this, 2);
+            if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
-            eActivities.eq(showIndex1).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(showIndex2).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-        }else{
-            eTitle.removeClass("fade");
-            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
         }
+
     };
 
     /**

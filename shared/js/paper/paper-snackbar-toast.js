@@ -15,14 +15,6 @@
     });
 
     /**
-     * Material Snackbar and Toast Framework
-     * @type {{version: number}}
-     */
-    paper["snackbar-toast"] = {
-        version: 0.01
-    };
-
-    /**
      * Create and show snackbar
      * @param {type} msg snackbar text
      * @param {type} actionText text of the button: eg. 'Undo' or 'Dismiss'

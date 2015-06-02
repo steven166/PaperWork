@@ -7,8 +7,6 @@
 
     paper.modal = {
 
-        version: 0.01,
-
         info: function (title, message, func, btnText) {
             paperPop(func, THEME_INFO, title, message, false, btnText);
         },

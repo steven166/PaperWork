@@ -143,7 +143,7 @@ var paper = {
                 }
 
                 var bg = $(comp).css("background-color");
-                if (bg === "transparent") {
+                if (bg === "transparent" || typeof(bg) === "undefined") {
                     return paper.wrippels.isLightBackground($(comp).parent());
                 } else if (bg.indexOf("rgba") == 0) {
                     bg = bg.substring(5, bg.length - 1);
@@ -384,12 +384,17 @@ var paper = {
             eHeader.addClass(header.getColor());
             if(header.getTitle() !== null || (header.getIcon() !== null || header.getLeftAction() !== null)){
                 var leftAction = $("<div class='left-action'></div>").appendTo(eHeader);
+                var hasIcon = header.getPushLeft();
                 if(header.getIcon() != null || header.getLeftAction() != null || header.getSource() != null) {
-                    var icon = $("<div class='icon wrippels'><div class='bar'></div><div class='bar'></div><div class='bar'></div></div>").appendTo(leftAction);
+                    hasIcon = true;
+                    var icon = $("<div class='icon'><div class='bar-container'><div class='bar'></div><div class='bar'></div><div class='bar'></div></div><i></i></div>").appendTo(leftAction);
+                    if(header.hasWrippels()){
+                        icon.addClass("wrippels");
+                    }
                     if (header.getLeftAction() !== null) {
                         icon.addClass("action-" + header.getLeftAction()).addClass("wrippels");
                     } else {
-                        var icon_i = $("<i></i>").addClass(header.getIcon()).appendTo(icon);
+                        var icon_i = icon.find("i").addClass(header.getIcon()).appendTo(icon);
                         if (header.getSource() != null) {
                             icon_i.css("background-image", "url(" + header.getSource() + ")");
                         }
@@ -406,57 +411,12 @@ var paper = {
                         }
                     }
                     var title = $("<div class='title'" + attr + ">" + key + "</div>").appendTo(leftAction);
-                    if(header.getIcon() == null && header.getLeftAction() == null && header.getSource() == null) {
-                        title.css("left", 0);
+                    if(hasIcon){
+                        title.addClass("push-left");
                     }
                 }
             }
-            var actionBar = $("<div class='action-bar'></div>").appendTo(eHeader);
-            var hasOverlay = false;
-            for(var i = 0; i < header.getActions().length; i++){
-                var a = header.getActions()[i];
-                if(a.getContent() != null){
-                    var hContent = a.getContent();
-                    if(typeof(paper.lang) !== "undefined"){
-                        hContent = paper.lang.replace(hContent);
-                    }
-                    $(hContent).appendTo(actionBar);
-                }else {
-                    var visibility = a.getShowAsAction();
-                    if (visibility === "always" || visibility === "withtext") {
-                        var action = $("<div class='action wrippels' tabindex='0'></div>").appendTo(actionBar);
-                        if (a.getId() !== null) {
-                            action.attr("id", a.getId());
-                        }
-                        $("<i></i>").addClass(a.getIcon()).appendTo(action);
-                    } else {
-                        hasOverlay = true;
-                    }
-                }
-            }
-            if(hasOverlay) {
-                var expandButton = $("<div class='action wrippels expand-button' tabindex='0'><i class='mdi-navigation-more-vert'></i></div>").appendTo(actionBar);
-                var actionOverlay = $("<div class='action-overlay hide'></div>").appendTo(actionBar);
-                for(var i = 0; i < header.getActions().length; i++){
-                    var a = header.getActions()[i];
-                    var visibility = a.getShowAsAction();
-                    if(visibility === "ifroom" || visibility === "never") {
-                        var title = a.getTitle();
-                        if(typeof(paper.lang) !== "undefined"){
-                            title = paper.lang.replace(title);
-                        }
-                        var action = $("<div class='action wrippels' tabindex='0'>" + title + "</div>").appendTo(actionOverlay);
-                        if(a.getId() !== null){
-                            action.attr("id", a.getId());
-                        }
-                        if(a.getIcon() !== null){
-                            $("<i></i>").addClass(a.getIcon()).appendTo(action);
-                        }
-                    }else{
-                        hasOverlay = true;
-                    }
-                }
-            }
+            updateActionButtons(header, eHeader);
 
             return eHeader;
         },
@@ -472,7 +432,9 @@ var paper = {
                 var eHeader = paper.header.render(header);
                 eHeader.prependTo(e);
                 header.setElement(eHeader);
-                //TODO: listen for resizing the header
+                eHeader.bind("resize", function(){
+                    updateActionButtons(header, eHeader);
+                });
             };
 
             if($("body").isReady) {
@@ -485,6 +447,17 @@ var paper = {
         },
 
         /**
+         * Detach Header from DOM
+         * @param {Header} header
+         */
+        detach: function(header){
+            var eHeader = header.getElement();
+            eHeader.unbind("resize");
+            header.setElement(null);
+            eHeader.remove();
+        },
+
+        /**
          * Update changes of the header to the DOM
          * @param {Header} header
          */
@@ -493,36 +466,253 @@ var paper = {
 
             element.attr("class", "paper-header " + header.getColor());
 
-            var key = header.getTitle();
-            var value = key;
-            var attr = null;
-            if(typeof(paper.lang) !== "undefined"){
-                value = paper.lang.replace(key);
-                if(value !== key){
-                    attr = paper.lang.extractKey(key);
+            var renderIcon = !(header.getLeftAction() === null && header.getSource() === null && header.getIcon() === null);
+            var eLeftAction = element.find(".left-action");
+            if(renderIcon || header.getTitle() !== null){
+                if(eLeftAction.length === 0){
+                    eLeftAction = $("<div class='left-action'></div>").prependTo(element);
                 }
-            }
-            element.find(".title").html(value);
-            if(attr != null){
-                element.find(".title").attr("lang-key", attr);
             }else{
-                element.find(".title").removeAttr("lang-key");
+                eLeftAction.remove();
             }
 
-            var icon = element.find(".icon").removeClass("action-menu").removeClass("action-back");
-            if(header.getLeftAction() === "menu"){
-                icon.addClass("action-menu");
-            }else if(header.getLeftAction() === "back"){
-                icon.addClass("action-back");
+            var key = header.getTitle();
+            if(key !== null){
+                var value = key;
+                var attr = null;
+                if(typeof(paper.lang) !== "undefined"){
+                    value = paper.lang.replace(key);
+                    if(value !== key){
+                        attr = paper.lang.extractKey(key);
+                    }
+                }
+                var eTitle = eLeftAction.find(".title");
+                if(eTitle.length === 0){
+                    eTitle = $("<div class='title'></div>").appendTo(eLeftAction);
+                }
+                eTitle.html(value);
+                if(attr != null){
+                    eTitle.attr("lang-key", attr);
+                }else{
+                    eTitle.removeAttr("lang-key");
+                }
+                var pushLeft = renderIcon || header.getPushLeft();
+                if(pushLeft){
+                    eTitle.addClass("push-left");
+                }else{
+                    eTitle.removeClass("push-left");
+                }
+            }else{
+                eLeftAction.find(".title").remove();
             }
-            if(header.getIcon() !== null){
-                icon.children("i").attr("class", header.getIcon());
+
+            if(renderIcon){
+                var icon = eLeftAction.find(".icon");
+                if(icon.length === 0){
+                    icon = $("<div class='icon'><div class='bar-container'><div class='bar'></div><div class='bar'></div><div class='bar'></div></div><i></i></div>").prependTo(eLeftAction);
+                }
+                icon.removeClass("action-menu").removeClass("action-back").removeClass("wrippels");
+                if(header.hasWrippels()){
+                    icon.addClass("wrippels");
+                }
+
+                if(header.getLeftAction() === "menu"){
+                    icon.addClass("action-menu");
+                }else if(header.getLeftAction() === "back"){
+                    icon.addClass("action-back");
+                }
+                if(header.getIcon() !== null){
+                    icon.find("i").attr("class", header.getIcon());
+                }
+                if(header.getSource() !== null){
+                    icon.find("i").css("background-image", "url(" + header.getSource() + ")");
+                }
+                if(header.getLeftAction() === null && header.getSource() === null){
+                    icon.remove();
+                }
+
+            }else{
+                eLeftAction.find(".icon").remove();
             }
-            if(header.getSource() !== null){
-                icon.children("i").css("background-image", "url(" + header.getSource() + ")");
+
+            updateActionButtons(header, element);
+        }
+
+    };
+
+    var updateActionButtons = function(header, eHeader){
+        var actionList = header.getActions();
+
+        //Remove actionbar if empty
+        if(actionList.length === 0){
+            eHeader.find(".action-bar").remove();
+            return;
+        }
+
+        //Add action bar if missing
+        var eActionBar = eHeader.find(".action-bar");
+        if(eActionBar.length === 0 ){
+            eActionBar = $("<div class='action-bar'></div>").appendTo(eHeader);
+        }
+        eActionBar.children().remove();
+
+        //Order actions
+        var orderedList = orderActions(actionList);
+
+        //Render always icons
+        var takenSlots = 0;
+        if(typeof(orderedList["always"]) !== "undefined"){
+            takenSlots = orderedList["always"].length;
+            for (var i = 0; i < orderedList["always"].length; i++) {
+                var action = orderedList["always"][i];
+                if(action.getContent() != null){
+                    var hContent = action.getContent();
+                    if(typeof(paper.lang) !== "undefined"){
+                        hContent = paper.lang.replace(hContent);
+                    }
+                    $(hContent).appendTo(eActionBar);
+                }else {
+                    var eAction = $("<div class='action wrippels' tabindex='0'></div>").appendTo(eActionBar);
+                    if (action.getId() !== null) {
+                        eAction.attr("id", action.getId());
+                    }
+                    $("<i></i>").addClass(action.getIcon()).appendTo(eAction);
+                }
             }
         }
 
+        //Find amount of slot available
+        var headerWidth = eHeader.width();
+        var slots = 0;
+        if(headerWidth <= 400){
+            slots = 1;
+        }else if(headerWidth <= 456){
+            slots = 2;
+        }else if(headerWidth <= 512){
+            slots = 3;
+        }else{
+            slots = 4;
+        }
+        var freeSlots = slots - takenSlots;
+        var overlaySlosts = 0;
+        if(typeof(orderedList["never"]) !== "undefined"){
+            overlaySlosts = orderedList["never"].length;
+        }
+        var renderedActions = [];
+
+        //Render ifroom and withtext actions
+        for(var i = 0; i < orderedList["all"].length; i++){
+            if(freeSlots <= 0){
+                break;
+            }
+            var action = orderedList["all"][i];
+            if(action.getShowAsAction() === "ifroom" || action.getShowAsAction() === "withtext"){
+                if(action.getContent() != null){
+                    var hContent = action.getContent();
+                    if(typeof(paper.lang) !== "undefined"){
+                        hContent = paper.lang.replace(hContent);
+                    }
+                    $(hContent).appendTo(actionBar);
+                    freeSlots += -1;
+                    renderedActions.push(action.getId());
+                }else {
+                    var eAction = $("<div class='action wrippels' tabindex='0'></div>").appendTo(eActionBar);
+                    if (action.getId() !== null) {
+                        eAction.attr("id", action.getId());
+                    }
+                    if(action.getShowAsAction() === "withtext"){
+                        eAction.addClass("with-text");
+                    }
+                    if(action.getShowAsAction() === "withtext" && freeSlots >= 3){
+                        var title = action.getTitle();
+                        if(typeof(paper.lang) !== "undefined"){
+                            title = paper.lang.replace(title);
+                        }
+                        $("<span>" + title + "</span>").appendTo(eAction);
+                        freeSlots += -3;
+                    }else{
+                        freeSlots += -1;
+                    }
+                    $("<i></i>").addClass(action.getIcon()).appendTo(eAction);
+                    renderedActions.push(action.getId());
+                }
+            }
+        }
+
+        var eOverlay = $("<div class='action-overlay hide'></div>");
+        for(var i = 0; i < orderedList["all"].length; i++){
+            var action = orderedList["all"][i];
+            if(action.getShowAsAction() !== "always"){
+                var exists = false;
+                for(var j = 0; j < renderedActions.length; j++){
+                    if(renderedActions[j] === action.getId()){
+                        exists = true;
+                    }
+                }
+                if(exists){
+                    continue;
+                }
+
+                var title = action.getTitle();
+                if(typeof(paper.lang) !== "undefined"){
+                    title = paper.lang.replace(title);
+                }
+                var eAction = $("<div class='action wrippels' tabindex='0'>" + title + "</div>").appendTo(eOverlay);
+                if(action.getId() !== null){
+                    eAction.attr("id", action.getId());
+                }
+                if(action.getIcon() !== null){
+                    $("<i></i>").addClass(action.getIcon()).appendTo(eAction);
+                }
+
+            }
+        }
+        if(eOverlay.children().length > 0){
+            var expandButton = $("<div class='action wrippels expand-button' tabindex='0'><i class='mdi-navigation-more-vert'></i></div>").appendTo(eActionBar);
+            eOverlay.appendTo(eActionBar);
+        }
+        setTimeout(function(){
+            var eTitle = eHeader.find(".title");
+            if(eTitle.length > 0){
+                var width = eActionBar.width();
+                eTitle.css("right", width + "px");
+            }
+        }, 20);
+    };
+
+    var orderActions = function(actionList){
+        var orderList = {};
+        var min = 0;
+        var max = 0;
+        for(var i = 0; i < actionList.length; i++){
+            var action = actionList[i];
+            var order = action.getOrderInCategory();
+            if(typeof(orderList[order]) === "undefined"){
+                orderList[order] = [];
+                if(order > max){
+                    max = order;
+                }
+                if(order < min){
+                    min = order;
+                }
+            }
+            orderList[order].push(action);
+        }
+
+        var newActionList = {"all":[]};
+        for(var i = min; i <= max; i++){
+            if(typeof(orderList[i]) !== "undefined"){
+                for(var j = 0; j < orderList[i].length; j++){
+                    var action = orderList[i][j];
+                    if(typeof(newActionList[action.getShowAsAction()]) === "undefined"){
+                        newActionList[action.getShowAsAction()] = [];
+                    }
+                    newActionList[action.getShowAsAction()].push(action);
+                    newActionList["all"].push(action);
+                }
+            }
+        }
+        return newActionList;
     };
 
     //Listen to header action
@@ -576,6 +766,8 @@ var paper = {
         this.actions = [];
         this.leftAction = null;
         this.src = null;
+        this.pushLeft = false;
+        this.wrippels = true;
 
         if (typeof(options) !== "undefined") {
 
@@ -597,9 +789,31 @@ var paper = {
             if (typeof(options.src) !== "undefined") {
                 this.setSource(options.src);
             }
+            if (typeof(options.pushLeft) !== "undefined") {
+                this.setPushLeft(options.pushLeft);
+            }
+            if (typeof(options.wrippels) !== "undefined") {
+                this.setWrippels(options.wrippels);
+            }
 
         }
     }
+
+    Header.prototype.setWrippels = function(wrippels){
+        this.wrippels = wrippels;
+    };
+
+    Header.prototype.hasWrippels = function(){
+        return this.wrippels;
+    };
+
+    Header.prototype.setPushLeft = function(pushLeft){
+        this.pushLeft = pushLeft;
+    };
+
+    Header.prototype.getPushLeft = function(){
+        return this.pushLeft;
+    };
 
     Header.prototype.setElement = function(element){
         this.element = element;
@@ -610,7 +824,11 @@ var paper = {
     };
 
     Header.prototype.setTitle = function (title) {
-        this.title = title;
+        if(typeof(title) === "undefined"){
+            this.title = null;
+        }else{
+            this.title = title;
+        }
     };
 
     Header.prototype.getTitle = function(){
@@ -618,7 +836,11 @@ var paper = {
     };
 
     Header.prototype.setIcon = function (icon) {
-        this.icon = icon;
+        if(typeof(icon) === "undefined"){
+            this.icon = null;
+        }else{
+            this.icon = icon;
+        }
     };
 
     Header.prototype.getIcon = function () {
@@ -626,7 +848,11 @@ var paper = {
     };
 
     Header.prototype.setSource = function (src) {
-        this.src = src;
+        if(typeof(src) === "undefined"){
+            this.src = null;
+        }else{
+            this.src = src;
+        }
     };
 
     Header.prototype.getSource = function () {
@@ -695,6 +921,22 @@ var paper = {
 
     Header.prototype.getColor = function(){
         return this.color;
+    };
+
+    Header.prototype.render = function(){
+        return paper.header.render();
+    };
+
+    Header.prototype.update = function(){
+        paper.header.update(this);
+    };
+
+    Header.prototype.attach = function(element){
+        paper.header.attach(this, element);
+    };
+
+    Header.prototype.detach = function(){
+        paper.header.detach(this);
     };
 
     /**
@@ -777,6 +1019,19 @@ var paper = {
     var working = false;
     var appTitle = null;
 
+    var ajaxRegister = [];
+
+    var findEmptyKey = function(map, i){
+        if(typeof(i) === "undefined"){
+            i = 1;
+        }
+        if(typeof(map[i]) === "undefined"){
+            return i;
+        }else{
+            return findEmptyKey(map, i+1);
+        }
+    };
+
     /**
      * Material Application Framework
      * @type {{version: string, create: Function}}
@@ -797,6 +1052,114 @@ var paper = {
          */
         create: function(title, color, iconSrc){
             return new App(title, color, iconSrc);
+        },
+
+        post: function(url, data, success, dataType){
+            if(typeof(this.id) !== "undefined"){
+                return this.ajax({url: url, data: data, success: success, dataType: dataType, type: "POST"});
+            }else{
+                return paper.app.ajax({url: url, data: data, success: success, dataType: dataType, type: "POST"});
+            }
+        },
+
+        get: function(url, data, success, dataType){
+            if(typeof(this.id) !== "undefined"){
+                return this.ajax({url: url, data: data, success: success, dataType: dataType, type: "GET"});
+            }else{
+                return paper.app.ajax({url: url, data: data, success: success, dataType: dataType, type: "GET"});
+            }
+        },
+
+        ajax: function(url, settings){
+            var jqXHR = $.ajax(url, settings);
+            var onFail = undefined;
+            var onAlways = undefined;
+
+            var customJqXHR = {
+                done: jqXHR.done,
+                fail: function(func){
+                    onFail = func;
+                },
+                always: function(func){
+                    onAlways = func;
+                },
+                then: jqXHR.then,
+                readyState: jqXHR.readyState,
+                status: jqXHR.status,
+                statusText: jqXHR.statusText,
+                responseXML : jqXHR.responseXML ,
+                responseText : jqXHR.responseText ,
+                setRequestHeader: jqXHR.setRequestHeader,
+                getAllResponseHeaders: jqXHR.getAllResponseHeaders,
+                getResponseHeader: jqXHR.getResponseHeader,
+                statusCode: jqXHR.statusCode,
+                abort: jqXHR.abort,
+                original: jqXHR
+            };
+
+            if(typeof(this.ajaxRegister) !== "undefined"){
+                var index = findEmptyKey(this.ajaxRegister);
+                var xhrStore = this.ajaxRegister;
+                this.ajaxRegister[index] = customJqXHR;
+            }else{
+                var index = findEmptyKey(ajaxRegister);
+                var xhrStore = ajaxRegister;
+                ajaxRegister[index] = customJqXHR;
+            }
+
+            jqXHR.fail(function(jqXHR, textStatus, errorThrown){
+                var canceled = false;
+                if(typeof(onFail) !== "undefined"){
+                    canceled = onFail(jqXHR, textStatus, errorThrown) === false;
+                }
+
+                if(canceled){return;}
+                if(typeof(paper.app.errorHandlers[jqXHR.status]) !== "undefined"){
+                    canceled = paper.app.errorHandlers[jqXHR.status](jqXHR, textStatus, errorThrown) === false;
+                }
+
+                if(canceled){return;}
+                if (jqXHR.status === 0) {
+                    if (jqXHR.statusText === 'abort') {
+                        if(typeof(paper.app.errorHandlers.canceled) !== "undefined"){
+                            canceled = paper.app.errorHandlers.canceled(jqXHR, textStatus, errorThrown) === false;
+                        }
+                    }else{
+                        if(typeof(paper.app.errorHandlers.connectionError) !== "undefined") {
+                            canceled = paper.app.errorHandlers.connectionError(jqXHR, textStatus, errorThrown) === false;
+                        }
+                    }
+                }else if(jqXHR.status >= 400 && jqXHR.status < 500){
+                    if(typeof(paper.app.errorHandlers.connectionError) !== "undefined") {
+                        canceled = paper.app.errorHandlers.connectionError(jqXHR, textStatus, errorThrown) === false;
+                    }
+                }else if(jqXHR.status >= 500){
+                    if(typeof(paper.app.errorHandlers.serverError) !== "undefined") {
+                        canceled = paper.app.errorHandlers.serverError(jqXHR, textStatus, errorThrown) === false;
+                    }
+                }
+                if(canceled){return;}
+                if(!(jqXHR.status === 0 && jqXHR.statusText === "abort")){
+                    if(typeof(paper.app.errorHandlers.error) !== "undefined") {
+                        paper.app.errorHandlers.error(jqXHR, textStatus, errorThrown) === false;
+                    }
+                }
+            });
+            jqXHR.always(function(data, textStatus, jqXHR){
+                if(typeof(onAlways) !== "undefined"){
+                    onAlways(data, textStatus, jqXHR);
+                }
+                delete xhrStore[index];
+            });
+
+            return customJqXHR;
+        },
+
+        errorHandlers: {
+            error: undefined,
+            canceled: undefined,
+            connectionError: undefined,
+            serverError: undefined
         }
 
     };
@@ -860,6 +1223,10 @@ var paper = {
         object.id = id;
         object.visible = false;
         object.isLoaded = false;
+        object.post = paper.app.post;
+        object.get = paper.app.get;
+        object.ajax = paper.app.ajax;
+        object.ajaxRegister = [];
         //Store activity
         this.activities[id] = object;
         return id;
@@ -899,7 +1266,7 @@ var paper = {
         this.element.attr("class", "material-app theme-" + color);
         this.element.children(".app-header").attr("class", "app-header " + color);
         if (typeof(paper.wrippels) !== "undefined") {
-            var isLight = paper.wrippels.isLightBackground(app.element.children(".app-header"));
+            var isLight = paper.wrippels.isLightBackground(this.element.children(".app-header"));
             this.element.children(".app-header").attr("bg", (isLight ? "light" : "dark"));
             this.element.children(".app-content").children(".paper-group").children(".paper-activity").attr("bg", (isLight ? "light" : "dark"));
         }
@@ -1206,8 +1573,8 @@ var paper = {
         eActivity.appendTo(eOverlay);
         var leftAction = eActivity.children(".paper-header").children(".left-action");
         var icon = leftAction.children(".icon");
+        leftAction.children(".title").addClass("push-left");
         if(icon.length == 0){
-            leftAction.children(".title").css("left", "");
             icon = $("<div class='icon wrippels'><i></i></div>").appendTo(leftAction);
         }
         icon.children("i").attr("class", "mdi-content-clear");
@@ -1432,9 +1799,6 @@ var paper = {
             //Create activities
             var e1 = createActivity(app, group.activity_1, arg, color).appendTo(eGroup);
             var eTitle = e1.find(".paper-header .title");
-            if(eTitle.length > 0){
-                eTitle.css("left", "");
-            }
 
             var pos = "normal";
             if (typeof(group.activity_1_type) !== "undefined") {
@@ -1456,11 +1820,6 @@ var paper = {
             //Update header
 
             var leftAction = appHeader.children(".left-action");
-            var title = app.title;
-            if (typeof(group.title) !== "undefined") {
-                title = group.title;
-            }
-            app.header.setTitle(title);
             if(group.leftAction === "menu"){
                 app.header.setLeftAction(group.leftAction);
             }else if(group.leftAction === "back"){
@@ -1473,7 +1832,7 @@ var paper = {
                     app.header.setIcon(app.icon);
                 }
             }
-            paper.header.update(app.header);
+            app.header.update();
 
             //Add to DOM
             eGroup.appendTo(appContent);
@@ -1500,6 +1859,7 @@ var paper = {
      * @returns {jQuery}
      */
     function createActivity(app, activityName, invokeArg, color){
+        console.debug("Create Activity: " + activityName);
         var activity = app.activities[activityName];
         if(typeof(activity) !== "undefined") {
             activity.loaded = function () {};
@@ -1554,12 +1914,13 @@ var paper = {
                 activity.isLoaded = true;
                 content.appendTo(activityFrame);
             }
-            var hOptions = {color: color, title: activity.title, src: activity.src};
+            var hOptions = {color: color, title: activity.title, src: activity.src, pushLeft: activity.pushLeft};
             if (typeof(activity.actions) !== "undefined") {
                 hOptions.actions = activity.actions;
             }
             var header = paper.header.create(hOptions);
             paper.header.attach(header, eActivity);
+            activity.header = header;
             eActivity.children(".paper-header").addClass("fade");
 
             return eActivity;
@@ -1587,6 +1948,10 @@ var paper = {
      * @param {Activity} activity - Activity
      */
     function showActivity(activity){
+        if(activity.visible){
+            return;
+        }
+        console.debug("Show Activity: " + activity.id);
         if(typeof(paper.lang) !== "undefined"){
             paper.lang.updateLanguage($("#a-" + activity.id));
         }
@@ -1606,6 +1971,10 @@ var paper = {
      * @param {Activity} activity - Activity
      */
     function hideActivity(activity){
+        if(!activity.visible){
+            return;
+        }
+        console.debug("Hide Activity: " + activity.id);
         if(typeof(activity.element) !== "undefined") {
             activity.element.children(".activity-frame").children(".activity-body").addClass("fade");
             activity.element.children(".paper-header").addClass("fade");
@@ -1621,12 +1990,23 @@ var paper = {
      * @param {Activity} activity - Activity
      */
     function destroyActivity(activity){
+        console.debug("Destory Activity: " + activity.id);
         if(typeof(activity.onDestroy) !== "undefined"){
             activity.onDestroy();
+        }
+        if(typeof(activity.header) !== "undefined"){
+            activity.header.detach();
         }
         if(typeof(activity.element) !== "undefined") {
             activity.element.remove();
             activity.element = undefined;
+        }
+        if(typeof(activity.ajaxRegister) !== "undefined"){
+            for(var key in activity.ajaxRegister){
+                var customXHR = activity.ajaxRegister[key];
+                customXHR.abort();
+            }
+            activity.ajaxRegister = [];
         }
     }
 
@@ -1635,21 +2015,24 @@ var paper = {
      */
     App.prototype.init = function(){
         if(this.isInit){
-           return;
+            return;
         }
+        console.info("init app");
         this.isInit = true;
         var app = this;
         appTitle = app.title;
+        if(typeof(paper.lang) !== "undefined"){
+            appTitle = paper.lang.replace(appTitle);
+        }
         $("head").append("<meta name='theme-color' content='" + paper.colors[app.color] + "'>")
         var materialApp = $("<div class='material-app fade'></div>");
         var appHeader = $("<div class='app-header'></div>").addClass(this.color).appendTo(materialApp);
         var header = paper.header.create({
-            title: app.title,
             icon: app.iconSrc,
             color: app.color
         });
-        app.header = header;
         paper.header.attach(header, materialApp);
+        app.header = header;
         var appContent = $("<div class='app-content'></div>").appendTo(materialApp);
 
         this.element = materialApp;
@@ -1661,6 +2044,11 @@ var paper = {
                 routingManager.update();
                 installAppListeners(app);
                 app.goToUrl(location.href, false);
+
+                if(typeof(paper.wrippels) !== "undefined"){
+                    var lightBackground = paper.wrippels.isLightBackground(appHeader);
+                    header.getElement().attr("bg", (lightBackground ? "light" : "dark"));
+                }
             }, 20);
         };
 
@@ -1692,6 +2080,18 @@ var paper = {
                 app.back();
             }
         });
+        document.addEventListener("visibilitychange", function(){
+            if(document.hidden) {
+                for (var i = 1; i <= 3; i++) {
+                    var activity = getCurrentActivity(app, i);
+                    if(activity != null){
+                        hideActivity(activity);
+                    }
+                }
+            }else{
+                app.updateLayout();
+            }
+        }, false);
         $("body").on("click", ".material-app > .paper-header .left-action .icon", function(){
             var groupData = getCurrentGroup(app);
             var groupName = groupData[0];
@@ -1736,6 +2136,7 @@ var paper = {
      */
     App.prototype.updateLayout = function(){
         console.debug("update layout");
+        var selectedActivity = 1;
         var eIcon = this.header.getElement().children(".left-action").children(".icon");
         var group = this.element.children(".app-content").children(".paper-group");
         var slots = 0;
@@ -1859,6 +2260,7 @@ var paper = {
                     group.parent().attr("slots", 3);
                     eActivities.eq(0).attr("pos", "xoo");
                     eActivities.eq(1).attr("pos", "oxx");
+                    selectedActivity = 2;
                 }else{
                     var activity_1 = getCurrentActivity(this, 0);
                     var activity_2 = getCurrentActivity(this, 1);
@@ -1899,6 +2301,7 @@ var paper = {
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
                 eActivities.eq(2).attr("pos", "oox");
+                selectedActivity = 2;
             }
 
             //Set Back icon if necessary
@@ -1950,6 +2353,7 @@ var paper = {
                 group.parent().attr("slots", 2);
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
+                selectedActivity = 2;
             }else if(eActivities.length == 3){
                 var activity_1 = getCurrentActivity(this, 0);
                 var activity_2 = getCurrentActivity(this, 1);
@@ -1974,6 +2378,7 @@ var paper = {
                 eActivities.eq(0).attr("pos", "xoo");
                 eActivities.eq(1).attr("pos", "oxo");
                 eActivities.eq(2).attr("pos", "oox");
+                selectedActivity = 3;
             }
 
             //Set back icon if necessary
@@ -1999,88 +2404,66 @@ var paper = {
             }
         }
 
-        var activity_1 = getCurrentActivity(this, 0);
-        var activity_2 = getCurrentActivity(this, 1);
-        var activity_3 = getCurrentActivity(this, 2);
-        var hideTitle = -1;
-        if(activity_3 != null){
-            if(typeof(activity_3.title) !== "undefined"){
-                var slots = group.parent().attr("slots");
-                var pos = eActivities.eq(2).attr("pos");
-                if($("body").width() >= 720 && $("body").width() < 1080){
-                    if(slots == 3 && pos === "oxx"){
-                        hideTitle = 2;
-                        eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    }
-                }else if($("body").width() < 720){
-                    if(slots == 3){
-                        hideTitle = 2;
-                        eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    }
+        var title = this.title;
+        var groupName = getCurrentGroup(this)[0];
+        var vGroup = this.activityGroups[groupName];
+        if(typeof(vGroup.title) !== "undefined"){
+            title = vGroup.title;
+        }
+
+        if(selectedActivity > 1){
+            for(var i = 1; i < selectedActivity; i++){
+                var iActivity = getCurrentActivity(this, i-1);
+                if(typeof(iActivity.title) !== "undefined"){
+                    title = iActivity.title;
                 }
             }
         }
-        if(hideTitle == -1) {
-            if (activity_2 != null) {
-                if (typeof(activity_2.title) !== "undefined") {
-                    var slots = group.parent().attr("slots");
-                    var pos = eActivities.eq(1).attr("pos");
-                    if ($("body").width() >= 720 && $("body").width() < 1080) {
-                        if (slots == 3 && pos === "oxx") {
-                            hideTitle = 1;
-                            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    } else if ($("body").width() < 720) {
-                        if (slots == 2) {
-                            hideTitle = 1;
-                            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    }
-                }
+
+        var vActivity = getCurrentActivity(this, selectedActivity-1);
+        if(typeof(vActivity.title) !== "undefined"){
+            title = vActivity.title;
+        }
+        vActivity.header.setTitle(title);
+        vActivity.header.setPushLeft(true);
+        vActivity.header.setIcon(null);
+        vActivity.header.setSource(null);
+        vActivity.header.setWrippels(true);
+        vActivity.header.update();
+        if(selectedActivity != 1){
+            var iActivity = getCurrentActivity(this, 0);
+            if(typeof(iActivity) !== "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
         }
-        if(hideTitle == -1) {
-            if (activity_1 != null) {
-                if (typeof(activity_1.title) !== "undefined") {
-                    var slots = group.parent().attr("slots");
-                    var pos = eActivities.eq(0).attr("pos");
-                    if ($("body").width() >= 1080) {
-                        hideTitle = 0;
-                        eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                    } else if ($("body").width() >= 720 && $("body").width() < 1080) {
-                        if (slots < 3) {
-                            hideTitle = 0;
-                            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    } else if ($("body").width() < 720) {
-                        if (slots == 1) {
-                            hideTitle = 0;
-                            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").addClass("fade");
-                        }
-                    }
-                }
+        if(selectedActivity != 2){
+            var iActivity = getCurrentActivity(this, 1);
+            if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
         }
-        var eTitle = this.element.children(".paper-header").children(".left-action").children(".title");
-        if(hideTitle != -1){
-            eTitle.addClass("fade");
-            var showIndex1 = 0;
-            var showIndex2 = 1;
-            if(hideTitle == 0){
-                showIndex1 = 1;
-                showIndex2 = 2;
-            }else if(hideTitle == 1){
-                showIndex1 = 0;
-                showIndex2 = 2;
+        if(selectedActivity != 3){
+            var iActivity = getCurrentActivity(this, 2);
+            if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                iActivity.header.setTitle(iActivity.title);
+                iActivity.header.setPushLeft(iActivity.pushleft);
+                iActivity.header.setIcon(iActivity.icon);
+                iActivity.header.setSource(iActivity.src);
+                iActivity.header.setWrippels(false);
+                iActivity.header.update();
             }
-            eActivities.eq(showIndex1).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(showIndex2).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-        }else{
-            eTitle.removeClass("fade");
-            eActivities.eq(0).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(1).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
-            eActivities.eq(2).children(".paper-header").children(".left-action").children(".icon").removeClass("fade");
         }
+
     };
 
     /**
@@ -2234,13 +2617,60 @@ var paper = {
         return false;
     }
 
-    var routingManager = new function(){
+    function RoutingManager(){
 
         var manager = this;
         var isInit = false;
         var autoBack = false;
 
+        /**
+         * Find the current position
+         * @param urlList list of urls in the history
+         * @param url Current url
+         * @returns {number, boolean} position or false if the url does not exists in the url list
+         */
+        var findPosition = function(urlList, url){
+            console.debug("routing -> [FIND POSITION] " + url);
+            var pos = -1;
+            for(var i = 0; i < urlList.length; i++){
+                var u = urlList[i];
+                var indexBack = urlList.length - i - 1;
+                if(u === url){
+                    console.debug("routing -> " + indexBack + ". (x) " + u);
+                    pos = indexBack;
+                }else{
+                    console.debug("routing -> " + indexBack + ". ( ) " + u);
+                }
+            }
+            console.debug("routing -> [POSITION] " + pos);
+            if(pos === -1){
+                return false;
+            }else{
+                return pos;
+            }
+        };
+
+        /**
+         * Find how many positions the new url is back from the current position
+         * @param newUrl The new URL
+         * @param oldUrl The current URL
+         * @param oldUrls List of all the urls in the history
+         * @returns {boolean, int} number of positions back, false if it cannot find the new or the old position
+         */
+        var getAmountBack = function(oldUrls, oldUrl, newUrl){
+            var newIndex = findPosition(oldUrls, newUrl);
+            var currentIndex = findPosition(oldUrls, oldUrl);
+
+            var amountBack = false;
+            if(newIndex !== false && currentIndex !== false) {
+                var amountBack = currentIndex - newIndex;
+            }
+            console.debug("routing -> [AMOUNT BACK] " + amountBack);
+            return amountBack;
+        };
+
         this.replaceUrl = function(url, title){
+            console.debug("routing -> [REPLACE] " + location.href + " ->" + url);
             var urls = getHistoryItems();
             urls[urls.length-1] = url;
             setHistoryItems(urls);
@@ -2257,6 +2687,7 @@ var paper = {
          * @return {boolean} true if back
          */
         this.goTo = function(newUrl, title){
+            console.debug("routing -> [GOTO] " + location.href + " ->" + newUrl);
 
             var oldLength = getHistoryLength();
             var oldUrls = getHistoryItems();
@@ -2264,6 +2695,7 @@ var paper = {
             var newLength = history.length;
 
             if(newUrl !== oldUrl){
+                console.debug("routing -> [LOCATION CHANGED]");
                 var oldUrlData = getPath();
                 var newUrlData = getPath(newUrl);
                 var isNewLower = false;
@@ -2284,39 +2716,27 @@ var paper = {
                     isNewLower = true;
                 }
 
-                console.debug("isNewLower: " + isNewLower);
-                console.debug("isReplace: " + isReplace);
-                if(isReplace){
+                console.debug("routing -> [isNewLower] " + isNewLower);
+                console.debug("routing -> [isReplace] " + isReplace);
+                if(isReplace && !isNewLower){
                     //Replace current state
                     manager.replaceUrl(newUrl, title);
                 }else if(isNewLower){
                     //Go back
-                    var amountBack = -1;
-                    for(var i = 0; i < oldUrls.length; i++){
-                        var u = oldUrls[oldUrls.length-1-i];
-                        if(u === newUrl){
-                            amountBack = i;
-                            break;
-                        }
-                    }
-                    console.debug("goBack: " + amountBack);
-                    if(amountBack == -1){
+                    var amountBack = getAmountBack(oldUrls, oldUrl, newUrl);
+
+                    console.debug("routing -> [goBack] " + amountBack);
+                    if(amountBack === false){
                         //History item not exists
-                        var currentPos = -1;
-                        for(var i = 0; i < oldUrls.length; i++){
-                            var u = oldUrls[oldUrls.length-1-i];
-                            if(u === oldUrl){
-                                currentPos = i;
-                                break;
-                            }
-                        }
+                        console.debug("routing -> [NOT FOUND]");
 
                         var oldTitle = document.title;
                         history.replaceState(title, title, newUrl);
                         history.pushState(oldTitle, oldTitle, oldUrl);
                         autoBack = true;
                         history.back();
-                        if(currentPos == -1) {
+                        var currentPos = findPosition(oldUrls, oldUrl);
+                        if(currentPos === false) {
                             oldUrls[oldUrls.length - 1] = newUrl;
                             oldUrls.push(oldUrl);
                         }else{
@@ -2337,22 +2757,29 @@ var paper = {
                         return false;
                     }else{
                         //History item exists
+                        console.debug("routing -> [GO BACK] " + amountBack);
                         autoBack = true;
-                        history.go(-amountBack);
+                        history.go(amountBack);
                         setHistoryLength(history.length);
                         setLastUrl(newUrl);
                         return false;
                     }
                 }else{
+                    console.debug("routing -> [GO FORWARD]");
                     //Go forward
                     var oldLength = history.length;
                     history.pushState(title, title, newUrl);
                     var newLength = history.length;
                     if(newLength == oldLength +1){
                         //Do nothing
+                        console.debug("routing -> [DO NOTHING]");
                     }else if(newLength <= oldLength){
                         //Rewrite history
+                        console.debug("routing -> [REWRITE HISTORY]");
+                        console.debug("routing -> [OLD LENGTH] " + oldLength);
+                        console.debug("routing -> [NEW LENGTH] " + newLength);
                         var dif = oldLength - newLength;
+                        console.debug("routing -> [DIFFERENTS] " + dif);
                         if(dif > oldUrls.length){
                             oldUrls = [];
                         }else{
@@ -2362,6 +2789,7 @@ var paper = {
                             }
                             oldUrls = nurls;
                         }
+                        console.debug("routing -> [NEW HISTORY] -> " + oldUrls.length);
                     }
                     oldUrls.push(newUrl);
 
@@ -2370,6 +2798,7 @@ var paper = {
                     setLastUrl(newUrl);
                 }
             }else{
+                console.debug("routing -> [LOCATION SAME]");
                 setHistoryLength(history.length);
                 setLastUrl(newUrl);
             }
@@ -2380,10 +2809,12 @@ var paper = {
          * Check if there are changes in the browser history, and respond to it if necessary
          */
         this.update = function(){
+            console.debug("routing -> [UPDATE]");
             if(!isInit){
                 init();
             }else {
                 if(autoBack){
+                    console.debug("routing -> [AUTO BACK]");
                     autoBack = false;
                     return;
                 }
@@ -2396,52 +2827,60 @@ var paper = {
 
                 if(oldLength == null || oldUrls.length == 0 || oldUrl == null){
                     //No session -> do nothing
+                    console.debug("routing -> [NEW SESSION]");
+                    oldUrls.push(newUrl);
+                    setHistoryItems(oldUrls);
+                    setHistoryLength(newLength);
+                    setLastUrl(newUrl);
                 }else{
                     var moved = false;
                     if(oldLength == newLength){
                         if(oldUrl === newUrl){
                             //Reload -> do nothing
+                            console.debug("routing -> [RELOAD]");
                         }else{
                             //Moved
                             moved = true;
+                            console.debug("routing -> [MOVED]");
                         }
                     }else if(oldLength +1 == newLength){
                         //Go forward -> Add new entry
                         oldUrls.push(newUrl);
+                        console.debug("routing -> [FORWARD]");
                     }else if(oldLength +1 < newLength){
                         //Went away - Clear history
                         oldUrls = [newUrl];
+                        console.debug("routing -> [AWAY]");
                     }else{
                         //Moved
                         moved = true;
+                        console.debug("routing -> [MOVED]");
                     }
                     if(moved){
-                        var amountBack = -1;
-                        for(var i = 0; i < oldUrls.length; i++){
-                            var u = oldUrls[oldUrls.length-1-i];
-                            if(u === oldUrl){
-                                amountBack = i;
-                                break;
-                            }
-                        }
-                        if(amountBack == -1){
-                            //Cannot find current point
-                            oldUrls.push(newUrl);
-                        }else{
-                            //Create new history
-                            var newUrls = [];
-                            for(var i = 0; i < oldUrls.length - amountBack; i++){
-                                newUrls.push(oldUrls[i]);
-                            }
-                            newUrls.push(newUrl);
-                            oldUrls = newUrls;
-                        }
+                        manager.goTo(newUrl, document.title);
+                        //var amountBack = getAmountBack(oldUrls, oldUrl, newUrl);
+                        //if(amountBack === false){
+                        //    //Cannot find current point
+                        //    oldUrls.push(newUrl);
+                        //    console.debug("routing -> not found: push " + newUrl);
+                        //}else{
+                        //    //Create new history
+                        //    console.debug("routing -> [CREATE NEW HISTORY]");
+                        //    console.debug(oldUrls);
+                        //    var newUrls = [];
+                        //    for(var i = 0; i < oldUrls.length + amountBack; i++){
+                        //        newUrls.push(oldUrls[i]);
+                        //    }
+                        //    newUrls.push(newUrl);
+                        //    console.debug(newUrls);
+                        //    oldUrls = newUrls;
+                        //}
+                    }else{
+                        setHistoryItems(oldUrls);
+                        setHistoryLength(newLength);
+                        setLastUrl(newUrl);
                     }
                 }
-
-                setHistoryItems(oldUrls);
-                setHistoryLength(newLength);
-                setLastUrl(newUrl);
             }
         };
 
@@ -2453,160 +2892,11 @@ var paper = {
                 return;
             }
             isInit = true;
+            console.debug("routing -> [INIT]");
             $(window).bind("popstate", function(){
                 manager.update();
             });
             manager.update();
-        };
-
-        /**
-         * Compare last two urls and add urls between them if the transition is not logical
-         * @param {Array} urls
-         */
-        var checkLastTwoItems = function(urls){
-            if(urls.length == 1){
-                generateSession(document.title, urls[0]);
-            }else{
-                var newUrls = [];
-                for(var i = 0; i < urls.length -2; i++){
-                    newUrls.push(urls[i]);
-                }
-                var title = document.title;
-                var newUrlData = getPath(urls[urls.length-1]);
-                var oldUrlData = getPath(urls[urls.length-2]);
-                var hasReplaced = false;
-
-                if(newUrlData.group !== oldUrlData.group || newUrlData.arg !== oldUrlData.arg){
-                    var u = generateLocation(newUrlData.group, newUrlData.arg, [], null, null);
-                    newUrls.push(u);
-                    history.replaceState(title, title, u);
-                    hasReplaced = true;
-                }
-
-                if(newUrlData.acts.length >= 1 && typeof(newUrlData.acts[0]) !== "undefined" && typeof(oldUrlData.acts[0]) !== "undefined") {
-                    if (newUrlData.group !== oldUrlData.group || newUrlData.arg !== oldUrlData.arg ||
-                            newUrlData.acts[0].activity !== oldUrlData.acts[0].activity || newUrlData.acts[0].arg !== oldUrlData.acts[0].arg) {
-                        var u = generateLocation(newUrlData.group, newUrlData.arg, [newUrlData[0]], null, null);
-                        newUrls.push(u);
-                        if(hasReplaced){
-                            history.pushState(title, title, u);
-                        }else {
-                            history.replaceState(title, title, u);
-                            hasReplaced = true;
-                        }
-                    }
-                }
-
-                if(newUrlData.acts.length >= 2 && typeof(newUrlData.acts[1]) !== "undefined" && typeof(oldUrlData.acts[1]) !== "undefined") {
-                    if (newUrlData.group !== oldUrlData.group || newUrlData.arg !== oldUrlData.arg ||
-                            newUrlData.acts[0].activity !== oldUrlData.acts[0].activity || newUrlData.acts[0].arg !== oldUrlData.acts[0].arg ||
-                            newUrlData.acts[1].activity !== oldUrlData.acts[1].activity || newUrlData.acts[1].arg !== oldUrlData.acts[1].arg) {
-                        var u = generateLocation(newUrlData.group, newUrlData.arg, newUrlData.acts, null, null);
-                        newUrls.push(u);
-                        if(hasReplaced){
-                            history.pushState(title, title, u);
-                        }else {
-                            history.replaceState(title, title, u);
-                            hasReplaced = true;
-                        }
-                    }
-                }
-
-                if(newUrlData.overlay !== null) {
-                    if (newUrlData.group !== oldUrlData.group || newUrlData.arg !== oldUrlData.arg ||
-                            newUrlData.overlay !== oldUrlData.overlay || newUrlData.overlayArg !== oldUrlData.overlayArg) {
-                        var u = generateLocation(newUrlData.group, newUrlData.arg, newUrlData.acts, newUrlData.overlay, newUrlData.overlayArg);
-                        newUrls.push(u);
-                        if(hasReplaced){
-                            history.pushState(title, title, u);
-                        }else {
-                            history.replaceState(title, title, u);
-                            hasReplaced = true;
-                        }
-                    }
-                }
-
-                newUrls.push(u);
-                setHistoryLength(history.length);
-                setHistoryItems(newUrls);
-            }
-        };
-
-        /**
-         * Generate new session from home
-         * @param {string} title
-         * @param {string} url
-         */
-        var generateSession = function(title, url){
-            var urlData = getPath(url);
-            var hasReplaced = false;
-            var urls = [];
-            if(urlData.group != "home"){
-                var u = generateLocation("home", null, [], null, null);
-                urls.push(u);
-                history.replaceState(title, title, u);
-                hasReplaced = true;
-            }
-            if(urlData.acts.length == 0 && urlData.overlay === null){
-                urls.push(url);
-                if(hasReplaced){
-                    history.pushState(title, title, url);
-                }
-            }else if(urlData.acts.length == 0 && urlData.overlay !== null){
-                var u = generateLocation(urlData.group, urlData.arg, [], null, null);
-                urls.push(u);
-                if(hasReplaced){
-                    history.pushState(title, title, u);
-                }else{
-                    history.replaceState(title, title, u);
-                    hasReplaced = true;
-                }
-                urls.push(url);
-                if(hasReplaced){
-                    history.pushState(title, title, url);
-                }
-            }else{
-                var u = generateLocation(urlData.group, urlData.arg, [], null, null);
-                urls.push(u);
-                if(hasReplaced){
-                    history.pushState(title, title, u);
-                }else{
-                    history.replaceState(title, title, u);
-                    hasReplaced = true;
-                }
-
-                var u = generateLocation(urlData.group, urlData.arg, [urlData.acts[0]], null, null);
-                urls.push(u);
-                if(hasReplaced){
-                    history.pushState(title, title, u);
-                }else{
-                    history.replaceState(title, title, u);
-                    hasReplaced = true;
-                }
-                if(urlData.acts.length > 1){
-                    var u = generateLocation(urlData.group, urlData.arg, urlData.acts, null, null);
-                    urls.push(u);
-                    if(hasReplaced){
-                        history.pushState(title, title, u);
-                    }else{
-                        history.replaceState(title, title, u);
-                        hasReplaced = true;
-                    }
-                }
-                if(urlData.overlay !== null){
-                    var u = generateLocation(urlData.group, urlData.arg, urlData.acts, urlData.overlay, urlData.overlayArg);
-                    urls.push(u);
-                    if(hasReplaced){
-                        history.pushState(title, title, u);
-                    }else{
-                        history.replaceState(title, title, u);
-                        hasReplaced = true;
-                    }
-                }
-            }
-
-            setHistoryLength(history.length);
-            setHistoryItems(urls);
         };
 
         /**
@@ -2668,6 +2958,9 @@ var paper = {
         };
 
     };
+
+    var routingManager = new RoutingManager();
+    paper.app.routingManager = routingManager;
 
 })();
 (function () {

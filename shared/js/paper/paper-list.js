@@ -11,8 +11,6 @@
      */
     paper.list = {
 
-        version: 0.01,
-
         create: function(element, render){
             return new List(element, render);
         }
