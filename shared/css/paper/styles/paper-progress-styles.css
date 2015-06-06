@@ -1,0 +1,48 @@
+.theme-red .paper-progress *{background-color: #F44336;}
+.theme-pink .paper-progress *{background-color: #E91E63;}
+.theme-purple .paper-progress *{background-color: #9C27B0;}
+.theme-deep-purple .paper-progress *{background-color: #673AB7;}
+.theme-indigo .paper-progress *{background-color: #3F51B5;}
+.theme-blue .paper-progress *{background-color: #2196F3;}
+.theme-light-blue .paper-progress *{background-color: #03A9F4;}
+.theme-cyan .paper-progress *{background-color: #00BCD4;}
+.theme-teal .paper-progress *{background-color: #009688;}
+.theme-green .paper-progress *{background-color: #4CAF50;}
+.theme-light-green .paper-progress *{background-color: #8BC34A;}
+.theme-lime .paper-progress *{background-color: #CDDC39;}
+.theme-yellow .paper-progress *{background-color: #FFEB3B;}
+.theme-amber .paper-progress *{background-color: #FFC107;}
+.theme-orange .paper-progress *{background-color: #FF9800;}
+.theme-deep-orange .paper-progress *{background-color: #FF5722;}
+.theme-brown .paper-progress *{background-color: #795548;}
+.theme-gray .paper-progress *{background-color: #9E9E9E;}
+.theme-dark-gray .paper-progress *{background-color: #333333;}
+.theme-light-gray .paper-progress *{background-color: #CCCCCC;}
+.theme-blue-gray .paper-progress *{background-color: #607D8B;}
+.theme-black .paper-progress *{background-color: black;}
+.theme-white .paper-progress *{background-color: white;}
+.theme-transparent .paper-progress *{background-color: rgba(0,0,0,0);}
+.paper-progress.red *{background-color: #F44336;}
+.paper-progress.pink *{background-color: #E91E63;}
+.paper-progress.purple *{background-color: #9C27B0;}
+.paper-progress.deep-purple *{background-color: #673AB7;}
+.paper-progress.indigo *{background-color: #3F51B5;}
+.paper-progress.blue *{background-color: #2196F3;}
+.paper-progress.light-blue *{background-color: #03A9F4;}
+.paper-progress.cyan *{background-color: #00BCD4;}
+.paper-progress.teal *{background-color: #009688;}
+.paper-progress.green *{background-color: #4CAF50;}
+.paper-progress.light-green *{background-color: #8BC34A;}
+.paper-progress.lime *{background-color: #CDDC39;}
+.paper-progress.yellow *{background-color: #FFEB3B;}
+.paper-progress.amber *{background-color: #FFC107;}
+.paper-progress.orange *{background-color: #FF9800;}
+.paper-progress.deep-orange *{background-color: #FF5722;}
+.paper-progress.brown *{background-color: #795548;}
+.paper-progress.gray *{background-color: #9E9E9E;}
+.paper-progress.dark-gray *{background-color: #333333;}
+.paper-progress.light-gray *{background-color: #CCCCCC;}
+.paper-progress.blue-gray *{background-color: #607D8B;}
+.paper-progress.black *{background-color: black;}
+.paper-progress.white *{background-color: white;}
+.paper-progress.transparent *{background-color: rgba(0,0,0,0);}
