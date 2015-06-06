@@ -4,7 +4,7 @@
  */
 var paper = {
 
-    version: 0.03,
+    version: "0.1.0",
 
     /**
      * Predefined Colors
@@ -36,12 +36,86 @@ var paper = {
         transparent: "rgba(0,0,0,0)"
     },
 
-    ready: false,
-
     /**
      * If page is fully loaded true, if not loaded false
      */
-    loaded: false
+    loaded: false,
+
+    /**
+     * List of all modules
+     */
+    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading"],
+
+    /**
+     * Get list of installed modules
+     * @returns {Array}
+     */
+    getInstalledModules: function(){
+        var installedModules = [];
+        for(var i = 0; i < paper.modules.length; i++){
+            var module = paper.modules[i];
+            if(typeof(paper[module]) !== "undefined"){
+                installedModules.push(module);
+            }
+        }
+        return installedModules;
+    },
+
+    /**
+     * Call init function on all modules
+     * @param element - rootElement to initialize (default is body)
+     */
+    initModules: function(element){
+        if(typeof(element) === "undefined"){
+            var e = $("body");
+        }else{
+            var e = $(element);
+        }
+        var modules = paper.getInstalledModules();
+        for(var i = 0; i < modules.length; i++){
+            var module = paper[modules[i]];
+            if(typeof(module["init"]) !== "undefined"){
+                module["init"](e);
+            }
+        }
+    },
+
+    loading: {
+        /**
+         * Find and initialze 'paper-loader' elements
+         * @param element - rootElement to initialize (default is body)
+         */
+        init: function(element){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-loading") && e.children().length === 0){
+                $("<svg viewBox='0 0 52 52'><circle cx='26px' cy='26px' r='20px' fill='none' stroke-width='4px' /></svg>").appendTo(e);
+            }else{
+                var loaders = e.find(".paper-loading");
+                loaders.each(function(){
+                    if($(this).children().length === 0){
+                        $("<svg viewBox='0 0 52 52'><circle cx='26px' cy='26px' r='20px' fill='none' stroke-width='4px' /></svg>").appendTo($(this));
+                    }
+                });
+            }
+        },
+
+        /**
+         * Create loader element
+         * @param color - predefined color
+         */
+        create: function(color){
+            var loader = $("<div class='paper-loading'></div>");
+            paper.loading.init(loader);
+            if(typeof(color) !== "undefined"){
+                loader.addClass(color);
+            }
+            return loader;
+        }
+    }
 };
 
 (function(){
@@ -54,6 +128,7 @@ var paper = {
     //Watch loading
     $(window).load(function(){
         paper.loaded = true;
+        console.info("Installed modules: " + paper.getInstalledModules());
         $(".paper-startup").fadeOut(200, function(){
             $(this).remove();
         });

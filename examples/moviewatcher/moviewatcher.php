@@ -7,47 +7,42 @@
     <link rel="manifest" href="manifest-app.json"/>
     <link rel="icon" sizes="192x192" href="../../shared/images/icons/icon-4x.png">
 
-    <link rel="stylesheet" href="../../shared/css/icons/google_icons.css"/>
-    <link rel="stylesheet" href="../../shared/css/paper-bundle.css"/>
-    <link rel="stylesheet" href="activities/css/app.css"/>
-
     <title>MovieWatcher</title>
 </head>
 <body>
     <?php
     //Include startup html
     include '../../shared/inc/startup.php';
-
-    //Include activities structure
-    $files = array_diff(scandir("activities/html"), array('..', '.'));
-    foreach($files as $file){
-        include "activities/html/$file";
-    }
     ?>
 
+    <!-- Style sheets -->
+    <link rel="stylesheet" href="../../shared/css/icons/google_icons.css"/>
+    <link rel="stylesheet" href="../../shared/css/paper-bundle.css"/>
+
+    <!-- Javascript Frameworks -->
     <script src="../../shared/js/jquery.min.js"></script>
     <script src="../../shared/js/paper-bundle.js"></script>
 
+    <!--Language files -->
     <script src="lang/en.js"></script>
 
-    <!--
-    Release bundle
-    <script src="index/bundle.js"></script>
-    -->
-    <!--
-    Debug scripts -->
-    <script src="activities/js/_app.js"></script>
-    <script src="activities/js/download.js"></script>
-    <script src="activities/js/film-info.js"></script>
-    <script src="activities/js/index-drawer.js"></script>
-    <script src="activities/js/index-panel.js"></script>
-    <script src="activities/js/search-flow.js"></script>
-    <script src="activities/js/settings.js"></script>
-    <script src="activities/js/settings-about.js"></script>
-    <script src="activities/js/settings-general.js"></script>
-    <script src="activities/js/trailer-overlay.js"></script>
-    <script src="activities/js/watchlist.js"></script>
-    <script src="activities/js/_groups.js"></script>
+    <!-- Create app -->
+    <script src="js/_app.js"></script>
+
+    <!-- Activities -->
+    <link rel="import" href="activities/download.html"/>
+    <link rel="import" href="activities/film-info.html"/>
+    <link rel="import" href="activities/index-drawer.html"/>
+    <link rel="import" href="activities/index-panel.html"/>
+    <link rel="import" href="activities/search-flow.html"/>
+    <link rel="import" href="activities/settings.html"/>
+    <link rel="import" href="activities/settings-about.html"/>
+    <link rel="import" href="activities/settings-general.html"/>
+    <link rel="import" href="activities/trailer-overlay.html"/>
+    <link rel="import" href="activities/watchlist.html"/>
+
+    <!-- Initialize App -->
+    <script src="js/_init.js"></script>
 
 </body>
 </html>

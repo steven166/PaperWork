@@ -1,0 +1,52 @@
+<template activity="settings-general">
+    <ul class="paper-list">
+        <li class="wrippels medium sep-bottom" id="settings-language">
+            <div class="title main" lang-key="language"></div>
+            <div class="title sub" lang-key="lang"></div>
+        </li>
+        <li class="wrippels sep-bottom" id="settings-cache" lang-key="clear-cache"></li>
+    </ul>
+</template>
+<script>
+    app.activity("settings-general", function(){
+
+        this.title = "@+general+@";
+
+        $("body").on("click", "[activity=settings-general] #settings-cache", function(){
+            paper.alert.error(paper.lang.get("clear-cache"), paper.lang.get("clear-cache-question"), function(){
+                var watchList = localStorage.getItem("watchList");
+                localStorage.clear();
+                if(watchList != null){
+                    localStorage.setItem("watchList", watchList);
+                }
+                getAPIConfig();
+                paper.toast(paper.lang.get("clear-cache-confirm"));
+            }, paper.lang.get("clear-cache"), paper.lang.get("cancel"));
+        });
+
+        $("body").on("click", "[activity=settings-general] #settings-language", function(){
+            var currentLanguage = paper.lang.get("lang");
+
+            var langKeys = paper.lang.getSupportedLanguages();
+            var langs = [];
+            for(var i = 0; i < langKeys.length; i++){
+                var map = paper.lang.getLanguageMap(langKeys[i]);
+                if(map != null){
+                    langs.push(map["lang"]);
+                }
+            }
+            paper.alert.options(paper.lang.get("language"), langs, currentLanguage, function(value){
+                for(var i = 0; i < langKeys.length; i++){
+                    var map = paper.lang.getLanguageMap(langKeys[i]);
+                    if(map != null){
+                        if(value === map["lang"]){
+                            paper.lang.setLanguage(langKeys[i]);
+                        }
+                    }
+                }
+            }, paper.lang.get("cancel"));
+        });
+
+    });
+
+</script>

@@ -1,0 +1,365 @@
+<template activity="film-info">
+    <style>
+        [activity=film-info][pos="oxo"] .film-info-cover{
+            position: relative;
+            height: 75vh;
+        }
+
+        [activity=film-info][pos="oxo"] .film-info-cover.notrailer{
+            height: 70vh;
+        }
+
+        [activity=film-info][pos="oxo"] .film-info-poster{
+            position: absolute;
+            width: 75%;
+            left: 12.5%;
+            top: 10px;
+            bottom: 100px;
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        [activity=film-info][pos="oxo"] .film-info-cover.notrailer .film-info-poster{
+            bottom: 55px;
+        }
+
+        [activity=film-info][pos="oxo"] .film-info-trailer{
+            position: absolute;
+            bottom: 45px;
+            left: 12.5%;
+            width: 75%;
+            margin-left: 0;
+        }
+
+        [activity=film-info][pos="oxo"] .film-info-download{
+            position: absolute;
+            bottom: 0px;
+            left: 12.5%;
+            width: 75%;
+            margin-left: 0;
+        }
+
+        [activity=film-info] .film-info-cover.notrailer .film-info-trailer{
+            display: none;
+        }
+
+        [activity=film-info][pos="oxx"] .film-info-cover{
+            position: absolute;
+            height: 100%;
+            width: 50%;
+            right: 0;
+            top: 0;
+            padding: 20px;
+        }
+
+        [activity=film-info][pos="oxx"] .film-info-poster{
+            position: absolute;
+            height: 430px;
+            width: 330px;
+            left: 50%;
+            margin-left: -165px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        [activity=film-info][pos="oxx"] .film-info-trailer{
+            display: block;
+            width: 330px;
+            left: 50%;
+            top: 440px;
+            margin-left: -165px;
+        }
+
+        [activity=film-info][pos="oxx"] .film-info-download{
+            display: block;
+            width: 330px;
+            left: 50%;
+            top: 440px;
+            margin-left: -165px;
+        }
+
+        [activity=film-info][pos="oxx"] .film-info-data{
+            width: 50%;
+            margin-top: 20px;
+        }
+
+        [activity=film-info] table{
+            width: 330px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        [activity=film-info] table th{
+            height: 40px;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: rgb(70,70,70);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        [activity=film-info] table td{
+            vertical-align: top;
+        }
+
+        [activity=film-info] .film-info-rating i{
+            position: relative;
+            top: -5px;
+            text-align: center;
+            font-size: 40px !important;
+            text-shadow: rgba(0, 0, 0, 0.43) 1px 1px;
+        }
+    </style>
+    <div class="film-info-cover">
+        <div class="film-info-poster shadow-3"></div>
+        <div class="film-info-trailer blue-gray paper-button wrippels"><i class="mdi-av-videocam"></i> <span lang-key="watch-trailer"></span></div>
+        <div class="film-info-download blue-gray paper-button wrippels"><i class="mdi-file-file-download"></i> <span lang-key="download"></span></div>
+    </div>
+    <div class="film-info-data">
+        <table>
+            <tr>
+                <th lang-key="rating"></th>
+                <td class="film-info-rating fg-yellow"></td>
+            </tr>
+            <tr>
+                <th lang-key="genre"></th>
+                <td class="film-info-genre"></td>
+            </tr>
+            <tr>
+                <th lang-key="release-date"></th>
+                <td class="film-info-date"></td>
+            </tr>
+            <tr>
+                <th lang-key="runtime"></th>
+                <td class="film-info-runtime"></td>
+            </tr>
+            <tr>
+                <th lang-key="spoken-lang"></th>
+                <td class="film-info-lang"></td>
+            </tr>
+            <tr>
+                <th lang-key="production-companies"></th>
+                <td class="film-info-production"></td>
+            </tr>
+            <tr>
+                <th lang-key="production-countries"></th>
+                <td class="film-info-countries"></td>
+            </tr>
+            <tr>
+                <th lang-key="summary"></th>
+                <td class="film-info-summary"></td>
+            </tr>
+        </table>
+    </div>
+</template>
+<script>
+    app.activity("film-info", function(){
+
+        var activity = this;
+        var videoSource = undefined;
+        var imdb = undefined;
+        this.title = "Movie";
+
+        this.actions = [
+            {
+                id: "watch-later",
+                icon: "mdi-action-visibility-off",
+                showAsAction: "always"
+            }
+        ];
+
+        this.onCreate = function(eActivity, invokeArg){
+            var urlData = app.getUrlData();
+            if(urlData.group === "watchlist"){
+                eActivity.find(".film-info-trailer").addClass("teal").removeClass("blue-gray");
+                eActivity.find(".film-info-download").addClass("teal").removeClass("blue-gray");
+            }
+
+            var movieJSON = localStorage.getItem("movie-" + invokeArg);
+            if(movieJSON == null){
+                eActivity.html("Not found");
+                return;
+            }
+            var movieMeta = JSON.parse(movieJSON);
+
+            activity.title = movieMeta.title;
+            var imageUrl = API_CONFIG.images.base_url + API_CONFIG.images.logo_sizes[1];
+            if(movieMeta.poster_path != null){
+                imageUrl += movieMeta.poster_path;
+                activity.src = imageUrl;
+            }else if(movieMeta.backdrop_path != null){
+                imageUrl += movieMeta.backdrop_path;
+                activity.src = imageUrl;
+            }
+
+            var watchList = localStorage.getItem("watchList");
+            if(watchList != null){
+                var jsonWatchList = JSON.parse(watchList);
+                if(typeof(jsonWatchList[invokeArg]) !== "undefined" && jsonWatchList[invokeArg] == true){
+                    activity.actions[0].icon = "mdi-action-visibility";
+                }else{
+                    activity.actions[0].icon = "mdi-action-visibility-off";
+                }
+            }else{
+                activity.actions[0].icon = "mdi-action-visibility-off";
+            }
+
+            var done = 0;
+
+            var getter = this.get("http://api.themoviedb.org/3/movie/" + invokeArg, {api_key: API_KEY, append_to_response: "videos", language: paper.lang.getLanguage()});
+            getter.done(function(json){
+                done++;
+
+                if(json.videos.results.length == 0){
+                    eActivity.find(".film-info-cover").addClass("notrailer");
+                }else{
+                    videoSource = json.videos.results[0].key;
+                }
+                var eRatings = eActivity.find(".film-info-rating");
+                var r = json.vote_average / 2;
+                for(var i = 0; i < r; i++){
+                    eRatings.append("<i class='fg-dark-gray mdi-action-star-rate'></i>");
+                }
+
+                imdb = json.imdb_id;
+
+                var eGenres = eActivity.find(".film-info-genre");
+                var genres = "";
+                for(var i = 0; i < json.genres.length; i++){
+                    if(genres === ""){
+                        genres = json.genres[i].name;
+                    }else{
+                        genres += ", " + json.genres[i].name;
+                    }
+                }
+                eGenres.html(genres);
+
+                var eDate = eActivity.find(".film-info-date");
+                eDate.html(json.release_date);
+
+                var eRuntime= eActivity.find(".film-info-runtime");
+                eRuntime.html(json.runtime + " minutes");
+
+                var eLang = eActivity.find(".film-info-lang");
+                var langs = "";
+                for(var i = 0; i < json.spoken_languages.length; i++){
+                    if(langs === ""){
+                        langs = json.spoken_languages[i].name;
+                    }else{
+                        langs += ", " + json.spoken_languages[i].name;
+                    }
+                }
+                eLang.html(langs);
+
+                var eProductions = eActivity.find(".film-info-production");
+                var producs = "";
+                for(var i = 0; i < json.production_companies.length; i++){
+                    if(producs === ""){
+                        producs = json.production_companies[i].name;
+                    }else{
+                        producs += ", " + json.production_companies[i].name;
+                    }
+                }
+                eProductions.html(producs);
+
+                var eCountries = eActivity.find(".film-info-countries");
+                var countries = "";
+                for(var i = 0; i < json.production_countries.length; i++){
+                    if(countries === ""){
+                        countries = json.production_countries[i].name;
+                    }else{
+                        countries += ", " + json.production_countries[i].name;
+                    }
+                }
+                eCountries.html(producs);
+
+                var eSummary = eActivity.find(".film-info-summary");
+                eSummary.html(json.overview);
+
+                if(done == 2){
+                    activity.loaded();
+                }
+            });
+            getter.fail(function(){
+                activity.loaded();
+            });
+
+            var imageUrl = API_CONFIG.images.base_url + API_CONFIG.images.poster_sizes[4];
+            var skipImage = false;
+            if(movieMeta.poster_path != null){
+                imageUrl += movieMeta.poster_path;
+            }else if(movieMeta.backdrop_path != null){
+                imageUrl += movieMeta.backdrop_path;
+            }else{
+                skipImage = true;
+            }
+            if(!skipImage){
+                var image = new Image();
+                image.onload = function(){
+                    eActivity.children(".film-info-cover").children(".film-info-poster").css("background-image", "url(" + imageUrl + ")");
+                    done++;
+                    if(done == 2){
+                        activity.loaded();
+                    }
+                };
+                image.src = imageUrl;
+            }else{
+                done++;
+            }
+
+            return false;
+        };
+
+        $("body").on("click", "[activity=film-info] .film-info-trailer", function(){
+            setTimeout(function(){
+                if(typeof(videoSource) !== "undefined") {
+                    app.overlay("trailer-overlay", videoSource);
+                }else{
+                    paper.toast("No trailer found");
+                }
+            }, 300);
+        });
+
+        $("body").on("click", "[activity=film-info] .film-info-download", function(){
+            setTimeout(function(){
+                app.goToActivity("download", 3, imdb);
+            }, 300);
+        });
+
+        $("body").on("click", "[activity=film-info] #watch-later", function(){
+            var i = $(this).children("i");
+            if(i.hasClass("mdi-action-visibility-off")){
+                i.removeClass("mdi-action-visibility-off").addClass("mdi-action-visibility");
+            }else{
+                i.removeClass("mdi-action-visibility").addClass("mdi-action-visibility-off");
+            }
+
+            var watchList = localStorage.getItem("watchList");
+            if(watchList == null) {
+                var jsonWatchList = {};
+            }else{
+                var jsonWatchList = JSON.parse(watchList);
+            }
+            var id = $("[activity=film-info]").attr("data-arg");
+            if(i.hasClass("mdi-action-visibility")){
+                jsonWatchList[id] = true;
+            }else{
+                delete jsonWatchList[id];
+            }
+            localStorage.setItem("watchList", JSON.stringify(jsonWatchList));
+            if(i.hasClass("mdi-action-visibility")){
+                paper.toast(paper.lang.get("watchlist-added"));
+            }else{
+                paper.toast(paper.lang.get("watchlist-removed"));
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,38 @@
+<template activity="trailer-overlay">
+    <style>
+        iframe{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        @media (min-width: 721px) {
+            [activity=trailer-overlay] {
+                left: 10% !important;
+                right: 10% !important;
+            }
+        }
+    </style>
+    <iframe frameborder="0" allowfullscreen></iframe>
+</template>
+<script>
+    app.activity("trailer-overlay", function(){
+
+        this.color = "dark-gray";
+        this.title = "Trailer";
+        var activity = this;
+
+        this.onCreate = function(eActivity, invokeArg){
+            eActivity.find("iframe").attr("src", "https://www.youtube.com/embed/" + invokeArg);
+            setTimeout(function(){
+                activity.loaded();
+            }, 100);
+            return false;
+        };
+
+    });
+</script>

@@ -10,7 +10,7 @@ $modules = array(
     "paper-button",
     "paper-checkbox",
     "paper-lang",
-    "paper-modal",
+    "paper-alert",
     "paper-snackbar-toast"
 );
 

@@ -26,7 +26,7 @@
 
 .paper-checkbox .paper-checkbox-label h4, .paper-radio .paper-radio-label h4{
     font-weight: bold;
-    margin-top: 16px;
+    margin-top: 14px;
 }
 
 .paper-checkbox .box-overlay, .paper-radio .box-overlay{
@@ -45,8 +45,8 @@
     display: inline-block;
     position: absolute;
 
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin: 15px;
     top: 0px;
     left: 0px;
@@ -77,7 +77,7 @@
     display: block;
     position: absolute;
 
-    top: 0px;
+    top: -1px;
     left: 4px;
     width: 5px;
     height: 10px;
@@ -90,14 +90,16 @@
     border-color: white;
     opacity: 0;
 
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg) scale(0);
+    transform: rotate(45deg) scale(0);
 
-    transition-duration: 0.2s;
-    transition-property: opacity;
+    transition-duration: 0.2s, 0.25s;
+    transition-property: opacity, transform;
 }
 
 .paper-checkbox.checked .box::before{
+    -webkit-transform: rotate(45deg) scale(1);
+    transform: rotate(45deg) scale(1);
     opacity: 1;
 }
 

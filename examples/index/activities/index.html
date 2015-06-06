@@ -1,0 +1,242 @@
+<template activity="index" class="activity-hide">
+    <style>
+        .index-title{
+            position: relative;
+            left: 0;
+
+            text-align: center;
+            opacity: 1;
+            transition-duration: 0.2s;
+            transition-property: opacity;
+        }
+
+        .index-title.fade{
+            opacity: 0;
+        }
+
+        .index-title h1{
+            display: inline-block;
+            position: relative;
+            left: 0;
+            margin-bottom: 10px;
+            font-size: 54px;
+            color: #333;
+            transition-duration: 0.5s;
+            transition-property: left;
+        }
+
+        .index-title.fade h1{
+            left: 50px;
+        }
+
+        .index-title h2{
+            margin-top: 0;
+            color: rgb(51,51,51);
+            opacity: 1;
+            transition-duration: 0.5s;
+            transition-property: opacity;
+        }
+
+        .index-title h2.fade{
+            opacity: 0;
+        }
+
+        .index-title .icon{
+            position: relative;
+            display: inline-block;
+            top: 25px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .index-title .icon .paper-icon{
+            position: absolute;
+            z-index: 3;
+            top: 10px;
+            left: 25px;
+            width: 50px;
+            height: 60px;
+            padding-top: 6px;
+
+            font-size: 40px;
+            text-align: center;
+
+            -webkit-transform: rotateX(60deg) rotateZ(-45deg);
+            transform: rotateX(60deg) rotateZ(-45deg);
+            opacity: 1;
+
+            transition-duration: 0.5s, 0.2s;
+            transition-property: top, opacity;
+        }
+
+        .index-title .icon .paper-icon.fade{
+            opacity: 0;
+            top: -20px;
+        }
+
+        .index-title .icon .paper-icon:nth-child(2){
+            z-index: 2;
+            top: 25px;
+        }
+
+        .index-title .icon .paper-icon:nth-child(2).fade{
+            top: -5px;
+        }
+
+        .index-title .icon .paper-icon:nth-child(3){
+            z-index: 1;
+            top: 40px;
+        }
+
+        .index-title .icon .paper-icon:nth-child(3).fade{
+            top: 10px;
+        }
+
+        article{
+            display: inline-block;
+            position: relative;
+            width: 500px;
+            left: 50%;
+            margin-left: -250px;
+
+            text-align: center;
+            color: rgb(51,51,51);
+            font-size: 18px;
+            border-top: 1px solid rgb(200,200,200);
+            opacity: 1;
+            transition-duration: 0.5s;
+            transition-property: opacity;
+        }
+
+        article ul{
+            text-align: left;
+            margin-left: 40px;
+            margin-bottom: 40px;
+            padding: 0;
+            list-style: none;
+            font-size: 16px;
+        }
+
+        article ul i{
+            position: relative;
+            top: 7px;
+            font-size: 30px;
+            line-height: 30px;
+        }
+
+        article.fade{
+            opacity: 0;
+        }
+
+        .index-buttons{
+            position: relative;
+            width: 600px;
+            left: 50%;
+            margin-left: -300px;
+        }
+
+        #github-button, #e-index #get-started-button{
+            top: -1px;
+        }
+
+        #github-button i{
+            display: inline-block;
+            position: relative;
+            top: -2px;
+            width: 28px;
+            height: 28px;
+            margin-right: 5px;
+            background-image: url("../../../shared/images/github.jpg");
+            vertical-align: top;
+        }
+
+        #github-button span{
+            top: 0px;
+        }
+    </style>
+    <div class="paper-col-1-5 center">
+        <div class="index-title fade">
+            <!--<img src="shared/images/icons/icon-4x.png"/>-->
+            <div class="icon">
+                <div class="paper-icon white fg-green shadow-1 fade">P</div>
+                <div class="paper-icon light-green shadow-1 fade"></div>
+                <div class="paper-icon teal shadow-1 fade"></div>
+            </div>
+            <h1 lang-key="app-name"></h1>
+            <h2 lang-key="index-sub" class="fade"></h2>
+        </div>
+        <article class="fade">
+            <h4 lang-key="index-desc"></h4>
+            <ul>
+                <li><i class="mdi-content-add-circle fg-green"></i> <span lang-key="index-benefit-1"></span></li>
+                <li><i class="mdi-content-add-circle fg-green"></i> <span lang-key="index-benefit-2"></li>
+                <li><i class="mdi-content-add-circle fg-green"></i> <span lang-key="index-benefit-3"></li>
+            </ul>
+            <div class="index-buttons">
+                <button id="github-button" class="paper-button white wrippels shadow-1"><i></i> <span lang-key="github"></span></button>
+                <button id="download-button" class="paper-button blue wrippels shadow-1"><i class="mdi-file-file-download"></i> <span lang-key="download"></span></button>
+                <button id="get-started-button" class="paper-button green wrippels shadow-1" lang-key="get-started"></button>
+            </div>
+        </article>
+    </div>
+</template>
+<script>
+    console.log("Load activity");
+    app.activity("index", function(){
+
+        this.actions = [
+            {
+                id: "language-button",
+                icon: "mdi-action-language",
+                showAsAction: "always"
+            }
+        ];
+
+        $("body").on("click", "[activity=index] #github-button", function(){
+            setTimeout(function(){
+                window.open("https://github.com/steven166/PaperWork", "_black");
+            }, 200);
+        });
+
+        $("body").on("click", "[activity=index] #download-button", function(){
+            setTimeout(function(){
+                app.goToGroup("download");
+            }, 200);
+        });
+
+        $("body").on("click", "[activity=index] #get-started-button", function(){
+            setTimeout(function(){
+                app.goToGroup("get-started");
+            }, 200);
+        });
+
+        $("body").on("click", "[activity=index] #language-button", function(){
+            paper.modal.options("Language", ["Engels", "Nederlands"], "Engels", function(){}, "Cancel");
+        });
+
+        this.onVisible = function(){
+            if(sessionStorage.getItem("firsttime") !== "true"){
+                setTimeout(function(){
+                    $("[activity=index] .index-title").removeClass("fade");
+                }, 500);
+                setTimeout(function(){
+                    $("[activity=index] .index-title .paper-icon").eq(2).removeClass("fade");
+                }, 700);
+                setTimeout(function(){
+                    $("[activity=index] .index-title .paper-icon").eq(1).removeClass("fade");
+                }, 900);
+                setTimeout(function(){
+                    $("[activity=index] .index-title .paper-icon").eq(0).removeClass("fade");
+                }, 1100);
+                setTimeout(function(){
+                    $("[activity=index] article").removeClass("fade");
+                    $("[activity=index] .index-title h2").removeClass("fade");
+                    sessionStorage.setItem("firsttime", "true");
+                }, 1500);
+            }else{
+                $("[activity=index] .fade").removeClass("fade");
+            }
+        };
+
+    });
+</script>

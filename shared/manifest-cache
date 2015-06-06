@@ -37,7 +37,7 @@ js/paper/paper-wrippels.js
 js/paper/paper-app.js
 js/paper/paper-snackbar-toast.js
 js/paper/paper-input.js
-js/paper/paper-modal.js
+js/paper/paper-alert.js
 js/paper/paper-checkbox.js
 js/paper/paper-lang.js
 

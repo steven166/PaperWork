@@ -4,7 +4,7 @@
  */
 var paper = {
 
-    version: 0.01,
+    version: "0.1.0",
 
     /**
      * Predefined Colors
@@ -36,12 +36,86 @@ var paper = {
         transparent: "rgba(0,0,0,0)"
     },
 
-    ready: false,
-
     /**
      * If page is fully loaded true, if not loaded false
      */
-    loaded: false
+    loaded: false,
+
+    /**
+     * List of all modules
+     */
+    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading"],
+
+    /**
+     * Get list of installed modules
+     * @returns {Array}
+     */
+    getInstalledModules: function(){
+        var installedModules = [];
+        for(var i = 0; i < paper.modules.length; i++){
+            var module = paper.modules[i];
+            if(typeof(paper[module]) !== "undefined"){
+                installedModules.push(module);
+            }
+        }
+        return installedModules;
+    },
+
+    /**
+     * Call init function on all modules
+     * @param element - rootElement to initialize (default is body)
+     */
+    initModules: function(element){
+        if(typeof(element) === "undefined"){
+            var e = $("body");
+        }else{
+            var e = $(element);
+        }
+        var modules = paper.getInstalledModules();
+        for(var i = 0; i < modules.length; i++){
+            var module = paper[modules[i]];
+            if(typeof(module["init"]) !== "undefined"){
+                module["init"](e);
+            }
+        }
+    },
+
+    loading: {
+        /**
+         * Find and initialze 'paper-loader' elements
+         * @param element - rootElement to initialize (default is body)
+         */
+        init: function(element){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-loading") && e.children().length === 0){
+                $("<svg viewBox='0 0 52 52'><circle cx='26px' cy='26px' r='20px' fill='none' stroke-width='4px' /></svg>").appendTo(e);
+            }else{
+                var loaders = e.find(".paper-loading");
+                loaders.each(function(){
+                    if($(this).children().length === 0){
+                        $("<svg viewBox='0 0 52 52'><circle cx='26px' cy='26px' r='20px' fill='none' stroke-width='4px' /></svg>").appendTo($(this));
+                    }
+                });
+            }
+        },
+
+        /**
+         * Create loader element
+         * @param color - predefined color
+         */
+        create: function(color){
+            var loader = $("<div class='paper-loading'></div>");
+            paper.loading.init(loader);
+            if(typeof(color) !== "undefined"){
+                loader.addClass(color);
+            }
+            return loader;
+        }
+    }
 };
 
 (function(){
@@ -54,6 +128,7 @@ var paper = {
     //Watch loading
     $(window).load(function(){
         paper.loaded = true;
+        console.info("Installed modules: " + paper.getInstalledModules());
         $(".paper-startup").fadeOut(200, function(){
             $(this).remove();
         });
@@ -130,8 +205,6 @@ var paper = {
     }
 
     paper.wrippels = {
-
-        version: 0.01,
 
         isLightBackground: function(comp) {
             try {
@@ -251,8 +324,6 @@ var paper = {
      */
     paper.list = {
 
-        version: 0.01,
-
         create: function(element, render){
             return new List(element, render);
         }
@@ -362,8 +433,6 @@ var paper = {
      * @type {{create: Function, render: Function, attach: Function, update: Function}}
      */
     paper.header = {
-
-        version: 0.01,
 
         /**
          * Create new header object
@@ -1039,11 +1108,6 @@ var paper = {
     paper.app = {
 
         /**
-         * Version of 'paper-app.js'
-         */
-        version: 0.02,
-
-        /**
          * Create new application
          * @param {string} title - Application title
          * @param {string} color - Default color of your app
@@ -1159,7 +1223,8 @@ var paper = {
             error: undefined,
             canceled: undefined,
             connectionError: undefined,
-            serverError: undefined
+            serverError: undefined,
+            notfound: "<h1><i class='mdi-alert-error fg-red'></i>Nothing here...</h1><h2>You'd better go <button onclick='history.back()' class='paper-button wrippels'><i class='mdi-navigation-arrow-back'></i>back</button></h2>"
         }
 
     };
@@ -1199,13 +1264,13 @@ var paper = {
     App.prototype.activity = function(id, content, activity){
         //Check arguments
         if(typeof(activity) === "undefined"){
-            var object = content;
-            var pContent = "#" + id;
+            var clss = content;
+            var pContent = "[activity='" + id + "']";
         }else{
-            var pContent = $(content);
-            var object = activity;
+            var pContent = content;
+            var clss = activity;
         }
-        if(typeof(object) === "undefined"){
+        if(typeof(clss) === "undefined"){
             throw "missing argument";
         }
         if(id === null || id === ""){
@@ -1216,19 +1281,13 @@ var paper = {
         }
 
         //Add properties to activity
-        if($(pContent).length == 0){
-            pContent = $("<div></div>");
-        }
-        object.content = $(pContent);
-        object.id = id;
-        object.visible = false;
-        object.isLoaded = false;
-        object.post = paper.app.post;
-        object.get = paper.app.get;
-        object.ajax = paper.app.ajax;
-        object.ajaxRegister = [];
+        var props = {};
+        props.content = pContent;
+        props.id = id;
+        props["class"] = clss
+
         //Store activity
-        this.activities[id] = object;
+        this.activities[id] = props;
         return id;
     };
 
@@ -1265,6 +1324,7 @@ var paper = {
         }
         this.element.attr("class", "material-app theme-" + color);
         this.element.children(".app-header").attr("class", "app-header " + color);
+        $("head meta[name='theme-color']").attr("content", paper.colors[color]);
         if (typeof(paper.wrippels) !== "undefined") {
             var isLight = paper.wrippels.isLightBackground(this.element.children(".app-header"));
             this.element.children(".app-header").attr("bg", (isLight ? "light" : "dark"));
@@ -1613,9 +1673,9 @@ var paper = {
         }, 200);
         var eActivity = eOverlay.children(".paper-activity");
         if (eActivity.length > 0) {
-            var id = eActivity.attr("id");
-            if(id !== null && typeof(id) !== "undefined") {
-                var activity = app.activities[id.substring(2)];
+            var activityId = eActivity.attr("activity");
+            if(activityId !== null && typeof(activityId) !== "undefined") {
+                var activity = app.activities[activityId];
                 if(typeof(activity) !== "undefined") {
                     hideActivity(activity);
                     activity.element.children(".paper-header").removeClass("fade");
@@ -1690,7 +1750,7 @@ var paper = {
             return null;
         }
         var eActivity = eActivities.eq(index);
-        return app.activities[eActivity.attr("id").substring(2)];
+        return app.activities[eActivity.attr("activity")];
     }
 
     /**
@@ -1703,7 +1763,7 @@ var paper = {
         if(appContent.children(".paper-group").length == 0){
             return [null, null];
         }else{
-            var groupName = appContent.children(".paper-group").attr("id").substring(2);
+            var groupName = appContent.children(".paper-group").attr("group");
             var arg = appContent.children(".paper-group").attr("data-arg");
             if(arg === "" || arg === null || typeof(arg) === "undefined"){
                 arg = null;
@@ -1743,8 +1803,8 @@ var paper = {
         var eGroup = app.element.children(".app-content").children(".paper-group");
         eGroup.addClass("fade");
         var eActivities = eGroup.children(".paper-activity").each(function(){
-            var id = $(this).attr("id").substring(2);
-            var activity = app.activities[id];
+            var activityId = $(this).attr("activity");
+            var activity = app.activities[activityId];
             if(typeof(activity) !== "undefined") {
                 hideActivity(activity);
                 destroyActivity(activity);
@@ -1773,7 +1833,7 @@ var paper = {
 
         var group = app.activityGroups[groupName];
         //Create group
-        var eGroup = $("<div class='paper-group fade' id='g-" + groupName + "'></div>");
+        var eGroup = $("<div class='paper-group fade' group='" + groupName + "'></div>");
         if (typeof(arg) !== "undefined" && arg !== null) {
             eGroup.attr("data-arg", arg);
         }
@@ -1862,13 +1922,14 @@ var paper = {
         console.debug("Create Activity: " + activityName);
         var activity = app.activities[activityName];
         if(typeof(activity) !== "undefined") {
+            //Reset settings
             activity.loaded = function () {};
             activity.isLoaded = false;
 
             //Create jQuery object
             var eActivity = $("<div class='paper-activity'></div>");
             activity.element = eActivity;
-            eActivity.attr("id", "a-" + activity.id);
+            eActivity.attr("activity", activity.id);
             var activityArg = invokeArg;
             if (activityArg === null) {
                 activityArg = undefined;
@@ -1877,23 +1938,31 @@ var paper = {
                 eActivity.attr("data-arg", invokeArg);
             }
 
+            //Add activity-frame
             var activityFrame = $("<div class='activity-frame fade'></div>").appendTo(eActivity);
             activityFrame.attr("bg", "light");
 
+            //Add content from the activity it self
             var content = activity.content.clone().removeClass("activity-hide");
             content.addClass("activity-body").addClass("fade");
-            content.attr("id", "e-" + activity.id);
+            content.attr("id", "body-" + activity.id);
+            content.removeAttr("activity");
 
             //Call Activity.onCreate
             if (typeof(activity.onCreate) !== "undefined") {
                 var succeed = activity.onCreate(content, activityArg);
                 if (succeed === false) {
+                    //Activity is still loading
+                    //Add loaded callback to continue initializing the activity when it is loaded
                     activity.loaded = function () {
                         activity.isLoaded = true;
                         if (activity.visible) {
+                            // Hide load rotator and show content
+                            // (Only when the activity is visible, otherwise it will be called on the onVisible event)
                             activityFrame.addClass("fade");
                             setTimeout(function () {
                                 activityFrame.children(".paper-loading").remove();
+                                paper.initModules(content);
                                 content.appendTo(activityFrame);
                                 if(typeof(paper.lang) !== "undefined"){
                                     paper.lang.updateLanguage(activity.element);
@@ -1905,15 +1974,22 @@ var paper = {
                             }, 200);
                         }
                     };
-                    $("<div class='paper-loading center'><svg viewBox='0 0 52 52'><circle cx='26px' cy='26px' r='20px' fill='none' stroke-width='4px' /></svg></div>").appendTo(activityFrame);
+                    //Add load rotator when the activity is still loading
+                    paper.loading.create().addClass("center").appendTo(activityFrame);
                 } else {
+                    //Append content to frame
                     activity.isLoaded = true;
+                    paper.initModules(content);
                     content.appendTo(activityFrame);
                 }
             } else {
+                //Append content to frame
                 activity.isLoaded = true;
+                paper.initModules(content);
                 content.appendTo(activityFrame);
             }
+
+            //Create header
             var hOptions = {color: color, title: activity.title, src: activity.src, pushLeft: activity.pushLeft};
             if (typeof(activity.actions) !== "undefined") {
                 hOptions.actions = activity.actions;
@@ -1921,12 +1997,22 @@ var paper = {
             var header = paper.header.create(hOptions);
             paper.header.attach(header, eActivity);
             activity.header = header;
+
+            //Add fade in class
             eActivity.children(".paper-header").addClass("fade");
+
+            //Move <style> from activity-body to activity root
+            var styles = content.children("style");
+            if(styles.length > 0) {
+                styles.prependTo(eActivity);
+            }
 
             return eActivity;
         }else{
+            //Activity does not exists
+            //Show 'Not found' message
             var eActivity = $("<div class='paper-activity'></div>");
-            eActivity.attr("id", "a-undefined");
+            eActivity.attr("activity", "undefined");
             var activityArg = invokeArg;
             if (activityArg === null) {
                 activityArg = undefined;
@@ -1937,8 +2023,8 @@ var paper = {
             var activityFrame = $("<div class='activity-frame fade'></div>").appendTo(eActivity);
 
             var activityBody = $("<div class='activity-body'></div>").appendTo(activityFrame);
-            var content = $("<div class='activity-empty'><h1>File Not Found</h1><h2>Error: 404</h2></div>").appendTo(activityBody);
-            content.attr("id", "e-" + activityName);
+            var content = $("<div class='activity-empty'>" + paper.app.errorHandlers.notfound + "</div>").appendTo(activityBody);
+            content.attr("activity", activityName);
             return eActivity;
         }
     }
@@ -1953,7 +2039,7 @@ var paper = {
         }
         console.debug("Show Activity: " + activity.id);
         if(typeof(paper.lang) !== "undefined"){
-            paper.lang.updateLanguage($("#a-" + activity.id));
+            paper.lang.updateLanguage($("[activity=" + activity.id + "]"));
         }
         activity.element.children(".activity-frame").removeClass("fade").children(".activity-body").removeClass("fade");
         activity.element.children(".paper-header").removeClass("fade");
@@ -2024,7 +2110,7 @@ var paper = {
         if(typeof(paper.lang) !== "undefined"){
             appTitle = paper.lang.replace(appTitle);
         }
-        $("head").append("<meta name='theme-color' content='" + paper.colors[app.color] + "'>")
+        $("head").append("<meta name='theme-color' content='" + paper.colors[app.color] + "'>");
         var materialApp = $("<div class='material-app fade'></div>");
         var appHeader = $("<div class='app-header'></div>").addClass(this.color).appendTo(materialApp);
         var header = paper.header.create({
@@ -2037,7 +2123,69 @@ var paper = {
 
         this.element = materialApp;
 
+        // Call activities
+        for(var key in app.activities){
+            var prop = app.activities[key];
+            var object = new prop["class"]();
+
+            object.content = prop.content;
+            object.id = prop.id;
+            object.visible = false;
+            object.isLoaded = false;
+            object.post = paper.app.post;
+            object.get = paper.app.get;
+            object.ajax = paper.app.ajax;
+            object.ajaxRegister = [];
+
+            app.activities[key] = object;
+        }
+
         var showApp = function(){
+            //Get content from imports
+            var importedHtml = [];
+            $("link[rel='import']").each(function(){
+                if(this.import !== null) {
+                    var template = $(this.import.querySelector("template"));
+                    if (template.length > 0) {
+                        importedHtml.push(template);
+                        console.debug("load import: " + $(this).attr("href"));
+                    }
+                }
+            });
+
+            //Init activities
+            for(var key in app.activities){
+                var activity = app.activities[key];
+                var content = $(activity.content);
+                console.log("content length: " + activity.content);
+                if(content.length == 0){
+                    //Not found in DOM -> Search imports
+                    var exists = false;
+                    for(var i = 0; i < importedHtml.length; i++){
+                        var template = importedHtml[i];
+                        if(template.attr("activity") === key){
+                            //Copy template into div
+                            content = $("<div></div>").html(template.html());
+                            var attributes = template[0].attributes;
+                            $.each(attributes, function() {
+                                content.attr(this.name, this.value);
+                            });
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(!exists) {
+                        //Create new element
+                        content = $("<div></div>");
+                    }
+                }else{
+                    content.remove();
+                }
+                activity.content = content;
+            }
+
+            //Add app to DOM
             materialApp.appendTo("body");
             setTimeout(function(){
                 materialApp.removeClass("fade");
@@ -2066,32 +2214,43 @@ var paper = {
      * @param {App} app
      */
     function installAppListeners(app){
+        //When window resizes
         $(window).resize(function(){
             app.updateLayout();
         });
+        //When navigate (eg. forward and back)
         $(window).bind("popstate", function(event){
             app.goToUrl(location.href, false);
         });
+
         $("body").on("click", ".material-app > .paper-overlay > *", function(){
             return false;
         });
+        //Close overlay when click on close button, or the overlay
         $("body").on("click", ".material-app > .paper-overlay, .material-app > .paper-overlay .paper-header .left-action .icon", function(){
             if($(this).hasClass("paper-overlay") || $(this).hasClass("icon")){
                 app.back();
             }
         });
+        //Fire activity.onVisible and activity.onInvisible when tab becomes invisible
         document.addEventListener("visibilitychange", function(){
-            if(document.hidden) {
-                for (var i = 1; i <= 3; i++) {
-                    var activity = getCurrentActivity(app, i);
-                    if(activity != null){
-                        hideActivity(activity);
+            for (var i = 0; i <= 3; i++) {
+                var activity = getCurrentActivity(app, i);
+                if(activity != null){
+                    if(document.hidden && activity.visible){
+                        if(typeof(activity.onInvisible) !== "undefined"){
+                            activity.onInvisible();
+                        }
+                    }else if(!document.hidden && activity.visible){
+                        if(typeof(activity.onVisible) !== "undefined"){
+                            activity.onVisible();
+                        }
                     }
+
                 }
-            }else{
-                app.updateLayout();
             }
         }, false);
+        //Click event on icon button (top-left icon)
         $("body").on("click", ".material-app > .paper-header .left-action .icon", function(){
             var groupData = getCurrentGroup(app);
             var groupName = groupData[0];
@@ -2100,10 +2259,12 @@ var paper = {
 
             if($(this).hasClass("action-menu")){
                 //open drawer
-                if(typeof(group.drawer) !== "undefined"){
-                    app.overlay(group.drawer, groupArg);
-                }else if(typeof(group.backAction) !== "undefined"){
-                    group.backAction();
+                if(typeof(group) !== "undefined") {
+                    if (typeof(group.drawer) !== "undefined") {
+                        app.overlay(group.drawer, groupArg);
+                    } else if (typeof(group.onLeftAction) !== "undefined") {
+                        group.onLeftAction();
+                    }
                 }
             }else if($(this).hasClass("action-back")){
                 //back
@@ -2124,8 +2285,10 @@ var paper = {
                     app.back();
                 }
             }else{
-                if(typeof(group.backAction) !== "undefined"){
-                    group.backAction();
+                if(typeof(group) !== "undefined") {
+                    if (typeof(group.onLeftAction) !== "undefined") {
+                        group.onLeftAction();
+                    }
                 }
             }
         });
@@ -2407,8 +2570,10 @@ var paper = {
         var title = this.title;
         var groupName = getCurrentGroup(this)[0];
         var vGroup = this.activityGroups[groupName];
-        if(typeof(vGroup.title) !== "undefined"){
-            title = vGroup.title;
+        if(typeof(vGroup) !== "undefined") {
+            if (typeof(vGroup.title) !== "undefined") {
+                title = vGroup.title;
+            }
         }
 
         if(selectedActivity > 1){
@@ -2421,46 +2586,48 @@ var paper = {
         }
 
         var vActivity = getCurrentActivity(this, selectedActivity-1);
-        if(typeof(vActivity.title) !== "undefined"){
-            title = vActivity.title;
-        }
-        vActivity.header.setTitle(title);
-        vActivity.header.setPushLeft(true);
-        vActivity.header.setIcon(null);
-        vActivity.header.setSource(null);
-        vActivity.header.setWrippels(true);
-        vActivity.header.update();
-        if(selectedActivity != 1){
-            var iActivity = getCurrentActivity(this, 0);
-            if(typeof(iActivity) !== "undefined" && iActivity != null){
-                iActivity.header.setTitle(iActivity.title);
-                iActivity.header.setPushLeft(iActivity.pushleft);
-                iActivity.header.setIcon(iActivity.icon);
-                iActivity.header.setSource(iActivity.src);
-                iActivity.header.setWrippels(false);
-                iActivity.header.update();
+        if(typeof(vActivity) !== "undefined") {
+            if (typeof(vActivity.title) !== "undefined") {
+                title = vActivity.title;
             }
-        }
-        if(selectedActivity != 2){
-            var iActivity = getCurrentActivity(this, 1);
-            if(typeof(iActivity) !==  "undefined" && iActivity != null){
-                iActivity.header.setTitle(iActivity.title);
-                iActivity.header.setPushLeft(iActivity.pushleft);
-                iActivity.header.setIcon(iActivity.icon);
-                iActivity.header.setSource(iActivity.src);
-                iActivity.header.setWrippels(false);
-                iActivity.header.update();
+            vActivity.header.setTitle(title);
+            vActivity.header.setPushLeft(true);
+            vActivity.header.setIcon(null);
+            vActivity.header.setSource(null);
+            vActivity.header.setWrippels(true);
+            vActivity.header.update();
+            if(selectedActivity != 1){
+                var iActivity = getCurrentActivity(this, 0);
+                if(typeof(iActivity) !== "undefined" && iActivity != null){
+                    iActivity.header.setTitle(iActivity.title);
+                    iActivity.header.setPushLeft(iActivity.pushleft);
+                    iActivity.header.setIcon(iActivity.icon);
+                    iActivity.header.setSource(iActivity.src);
+                    iActivity.header.setWrippels(false);
+                    iActivity.header.update();
+                }
             }
-        }
-        if(selectedActivity != 3){
-            var iActivity = getCurrentActivity(this, 2);
-            if(typeof(iActivity) !==  "undefined" && iActivity != null){
-                iActivity.header.setTitle(iActivity.title);
-                iActivity.header.setPushLeft(iActivity.pushleft);
-                iActivity.header.setIcon(iActivity.icon);
-                iActivity.header.setSource(iActivity.src);
-                iActivity.header.setWrippels(false);
-                iActivity.header.update();
+            if(selectedActivity != 2){
+                var iActivity = getCurrentActivity(this, 1);
+                if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                    iActivity.header.setTitle(iActivity.title);
+                    iActivity.header.setPushLeft(iActivity.pushleft);
+                    iActivity.header.setIcon(iActivity.icon);
+                    iActivity.header.setSource(iActivity.src);
+                    iActivity.header.setWrippels(false);
+                    iActivity.header.update();
+                }
+            }
+            if(selectedActivity != 3){
+                var iActivity = getCurrentActivity(this, 2);
+                if(typeof(iActivity) !==  "undefined" && iActivity != null){
+                    iActivity.header.setTitle(iActivity.title);
+                    iActivity.header.setPushLeft(iActivity.pushleft);
+                    iActivity.header.setIcon(iActivity.icon);
+                    iActivity.header.setSource(iActivity.src);
+                    iActivity.header.setWrippels(false);
+                    iActivity.header.update();
+                }
             }
         }
 
@@ -2494,6 +2661,9 @@ var paper = {
             var u = window.location.href;
         }else{
             var u = url;
+        }
+        while(u.substring(u.length-1, u.length) === "*"){
+            u = u.substring(0, u.length-1);
         }
         if(u.indexOf("#") != -1){
             var path = u.split("#")[1];
@@ -2623,6 +2793,8 @@ var paper = {
         var isInit = false;
         var autoBack = false;
 
+        var customStates = [];
+
         /**
          * Find the current position
          * @param urlList list of urls in the history
@@ -2669,6 +2841,63 @@ var paper = {
             return amountBack;
         };
 
+        /**
+         * Find out how many popups should be closed
+         * @param oldUrl
+         * @param newUrl
+         * @return {int} amount of popups should close
+         */
+        var shouldClosePopup = function(oldUrl, newUrl){
+            var oldPopupCount = 0;
+            var newPopupCount = 0;
+            //Count old popups
+            console.debug("routing -> POPUPS OLD: " + oldUrl);
+            for(var i = 0; i < oldUrl.length; i++){
+                var sub = oldUrl.substring(oldUrl.length-1-i, oldUrl.length-i);
+                if(sub === "*"){
+                    oldPopupCount++;
+                }else{
+                    break;
+                }
+            }
+            //Count new popups
+            console.debug("routing -> POPUPS NEW: " + newUrl);
+            for(var i = 0; i < newUrl.length; i++){
+                var sub = newUrl.substring(newUrl.length-1-i, newUrl.length-i);
+                if(sub === "*"){
+                    newPopupCount++;
+                }else{
+                    break;
+                }
+            }
+            console.debug("routing -> PopupCount [" + oldPopupCount + "] [" + newPopupCount + "]");
+            var dif = oldPopupCount - newPopupCount;
+            if(dif < 0){
+                dif = 0;
+            }
+            return dif;
+        };
+
+        /**
+         * Register new pushState with callBack
+         * @param callBack - called when the popup should close
+         */
+        this.pushCustomState = function(callBack){
+            console.debug("routing -> [POPUP] " + location.href);
+            customStates.push(callBack);
+            history.pushState(document.title, document.title, location.href + "*");
+            var urls = getHistoryItems();
+            urls.push(location.href);
+            setHistoryItems(urls);
+            setHistoryLength(history.length);
+            setLastUrl(location.href);
+        };
+
+        /**
+         * Replace current URL with a new one
+         * @param url - new url
+         * @param title - new title
+         */
         this.replaceUrl = function(url, title){
             console.debug("routing -> [REPLACE] " + location.href + " ->" + url);
             var urls = getHistoryItems();
@@ -2684,22 +2913,80 @@ var paper = {
          * if past go back in browser history
          * @param {string} url
          * @param {string} title
+         * @param {boolean} modifyHistory
          * @return {boolean} true if back
          */
-        this.goTo = function(newUrl, title){
-            console.debug("routing -> [GOTO] " + location.href + " ->" + newUrl);
+        this.goTo = function(newUrl, title, old, modifyHistory){
+            var oldUrl = old;
+            if(typeof(oldUrl) === "undefined"){
+                oldUrl = location.href;
+            }
+            var modHistory = true;
+            if(modifyHistory === false){
+                modHistory = false;
+            }
+            console.debug("routing -> [GOTO] " + oldUrl + " ->" + newUrl);
 
             var oldLength = getHistoryLength();
             var oldUrls = getHistoryItems();
-            var oldUrl = location.href;
             var newLength = history.length;
 
             if(newUrl !== oldUrl){
                 console.debug("routing -> [LOCATION CHANGED]");
-                var oldUrlData = getPath();
+                var oldUrlData = getPath(oldUrl);
                 var newUrlData = getPath(newUrl);
                 var isNewLower = false;
                 var isReplace = false;
+
+                //Check if popups should close
+                var popupsShouldClose = shouldClosePopup(oldUrl, newUrl);
+                //Close popups
+                for(var i = 0; i < popupsShouldClose; i++){
+                    console.debug("routing -> [CLOSE POPUP]");
+                    if(typeof(customStates[customStates.length - 1]) !== "undefined"){
+                        customStates[customStates.length - 1]();
+                        customStates.splice(customStates.length - 1, 1);
+                    }
+                }
+
+                if(oldUrlData.overlay === newUrlData.overlay &&
+                        oldUrlData.overlayArg === newUrlData.overlayArg &&
+                        oldUrlData.group === newUrlData.group &&
+                        oldUrlData.arg === newUrlData.arg &&
+                        oldUrlData.acts.length === newUrlData.acts.length){
+                    var same = true;
+                    for(var i = 0; i < oldUrlData.acts.length; i++){
+                        if(oldUrlData.acts[i].activity !== newUrlData.acts[i].activity ||
+                            oldUrlData.acts[i].arg !== newUrlData.acts[i].arg){
+                            same = false;
+                        }
+                    }
+                    if(same){
+                        console.debug("routing -> [LOCATION SAME]");
+                        //TODO: remove popup history
+                        for(var i = 0; i < popupsShouldClose; i++){
+                            if(oldUrls.length >= 3) {
+                                var closeUrl = oldUrls[oldUrls.length - 1];
+                                var gotoUrl = oldUrls[oldUrls.length - 2];
+                                if(closeUrl.substring(closeUrl.length-1, closeUrl.length) === "*"){
+                                    console.debug("routing -> [CLOSE URL] " + closeUrl + " -> " + gotoUrl);
+                                    var title = document.title;
+                                    autoBack = true;
+                                    history.go(-1);
+                                    setTimeout(function(){
+                                        history.pushState(title, title, gotoUrl);
+                                    }, 10);
+                                    oldUrls.splice(oldUrls.length-1, 1);
+                                }
+                            }
+                        }
+
+                        setHistoryItems(oldUrls);
+                        setHistoryLength(history.length);
+                        setLastUrl(newUrl);
+                        return false;
+                    }
+                }
 
                 if(oldUrlData.overlay !== null && newUrlData.overlay === null){
                     isReplace = true;
@@ -2733,8 +3020,10 @@ var paper = {
                         var oldTitle = document.title;
                         history.replaceState(title, title, newUrl);
                         history.pushState(oldTitle, oldTitle, oldUrl);
-                        autoBack = true;
-                        history.back();
+                        if(modHistory) {
+                            autoBack = true;
+                            history.back();
+                        }
                         var currentPos = findPosition(oldUrls, oldUrl);
                         if(currentPos === false) {
                             oldUrls[oldUrls.length - 1] = newUrl;
@@ -2759,7 +3048,9 @@ var paper = {
                         //History item exists
                         console.debug("routing -> [GO BACK] " + amountBack);
                         autoBack = true;
-                        history.go(amountBack);
+                        if(modHistory) {
+                            history.go(amountBack);
+                        }
                         setHistoryLength(history.length);
                         setLastUrl(newUrl);
                         return false;
@@ -2768,7 +3059,9 @@ var paper = {
                     console.debug("routing -> [GO FORWARD]");
                     //Go forward
                     var oldLength = history.length;
-                    history.pushState(title, title, newUrl);
+                    if(modHistory) {
+                        history.pushState(title, title, newUrl);
+                    }
                     var newLength = history.length;
                     if(newLength == oldLength +1){
                         //Do nothing
@@ -2799,6 +3092,7 @@ var paper = {
                 }
             }else{
                 console.debug("routing -> [LOCATION SAME]");
+
                 setHistoryLength(history.length);
                 setLastUrl(newUrl);
             }
@@ -2857,7 +3151,7 @@ var paper = {
                         console.debug("routing -> [MOVED]");
                     }
                     if(moved){
-                        manager.goTo(newUrl, document.title);
+                        manager.goTo(newUrl, document.title, oldUrl, false);
                         //var amountBack = getAmountBack(oldUrls, oldUrl, newUrl);
                         //if(amountBack === false){
                         //    //Cannot find current point
@@ -2965,84 +3259,72 @@ var paper = {
 })();
 (function () {
 
+    paper.form = {
+
+        init: function(element){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-input")){
+                if(e.children(".stat").length === 0){
+                    e.append("<div class='stat'></div>");
+                }
+                if(e.children(".stat-active").length === 0){
+                    e.append("<div class='stat-active'></div>");
+                }
+                if(e.children("label").length > 0){
+                    e.addClass("paper-label");
+                }
+            }else{
+                e.find(".paper-input").each(function(){
+                    paper.form.init(this);
+                });
+            }
+        }
+
+    }
+
     $("body").ready(function () {
-        $("body").on("keyup", ".paper-input input, .paper-input textarea", function () {
+        $("body").on("keyup, focus", ".paper-input input, .paper-input textarea", function () {
             var passed = validatePaperInput(this);
-
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            if (passed) {
-                stat.css("background-color", "#2196F3");
-                label.css("color", "#2196F3");
-            } else {
-                stat.css("background-color", "#E87C71");
-                label.css("color", "#E87C71");
-            }
-        });
-
-        $("body").on("focus", ".paper-input input, .paper-input textarea", function () {
-            var passed = validatePaperInput(this);
-
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            label.addClass("selected");
-            if (passed) {
-                stat.css("background-color", "#2196F3");
-                label.css("color", "#2196F3");
-            } else {
-                stat.css("background-color", "#F44336");
-                label.css("color", "#F44336");
-            }
-
-            stat.css("width", stat.parent().width() - 20 + "px");
-        });
-
-        $("body").on("change focus", ".paper-input select", function () {
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            if($(this).find(":selected").val() === "0"){
-                label.removeClass("selected");
+            if(passed){
+                $(this).parent().removeClass("danger");
             }else{
-                label.addClass("selected");
+                $(this).parent().addClass("danger");
             }
-            stat.css("background-color", "#2196F3");
-            label.css("color", "#2196F3");
-            stat.css("width", stat.parent().width() - 20 + "px");
         });
 
-        $("body").on("blur", ".paper-input input, .paper-input textarea", function () {
-            $(this).parent().children("label").css("color", "");
-            if ($(this).val() == null || $(this).val() == "") {
+        $("body").on("blur", ".paper-input.paper-label input, .paper-input.paper-label textarea", function () {
+            var val = $(this).val();
+            if(val === "" || val === null){
                 $(this).parent().children("label").removeClass("selected");
-            }
-            $(this).parent().children(".stat_active").css("width", "");
-        });
-        
-        $("body").on("blur", ".paper-input select", function(){
-            $(this).parent().children("label").css("color", "");
-            var label = $(this).parent().children("label");
-            if($(this).find(":selected").val() === "0"){
-                label.removeClass("selected");
             }else{
-                label.addClass("selected");
-            }
-            $(this).parent().children(".stat_active").css("width", "");
-        });
-
-        $(".paper-input.paper-label input, .paper-input.paper-label textarea").each(function () {
-            if ($(this).val() == null || $(this).val() == "") {
-                $(this).parent().children("label").removeClass("selected");
-            } else {
                 $(this).parent().children("label").addClass("selected");
             }
         });
 
-        $(".paper-input").each(function () {
-            if ($(this).children(".stat").length == 0) {
-                $(this).append("<div class='stat'></div>");
+        $("body").on("click", ".paper-input.paper-label label", function(){
+            $(this).parent().children("input, textarea, select").focus();
+        });
+
+        $("body").on("change focus", ".paper-input select", function () {
+            var label = $(this).parent().children("label");
+            if($(this).find(":selected").val() === "0"){
+                label.removeClass("selected");
+            }else{
+                label.addClass("selected");
             }
-            if ($(this).children(".stat_active").length == 0) {
-                $(this).append("<div class='stat_active'></div>");
+            $(this).removeClass("danger");
+        });
+        
+        $("body").on("blur", ".paper-input select", function(){
+            var label = $(this).parent().children("label");
+            if($(this).find(":selected").val() === "0"){
+                label.removeClass("selected");
+            }else{
+                label.addClass("selected");
             }
         });
     });
@@ -3126,8 +3408,6 @@ var paper = {
     }
 
     paper.lang = {
-
-        version: 0.02,
 
         getLanguage: function () {
             return language;
@@ -3287,9 +3567,7 @@ var paper = {
         console.error("\'paper-modal\' dependence on \'paper\'");
     }
 
-    paper.modal = {
-
-        version: 0.01,
+    paper.alert = {
 
         info: function (title, message, func, btnText) {
             paperPop(func, THEME_INFO, title, message, false, btnText);
@@ -3378,15 +3656,28 @@ var paper = {
             installListeners();
             show();
         }, 10);
+        if(typeof(paper.app) !== "undefined"){
+            paper.app.routingManager.pushCustomState(function(){
+                destroy();
+            });
+        }
 
         var FADE_TIME = 500;
 
         var installListeners = function () {
             $(".paper-modal-overlay").click(function () {
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
             });
             $(".paper-modal .paper-modal-footer .d-button").click(function () {
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
             });
             $(".paper-modal .paper-modal-footer .actionbtn").click(function () {
                 if (theme === THEME_INPUT && $("input[name='modal-input']").prop('required')) {
@@ -3399,7 +3690,11 @@ var paper = {
                         return;
                     }
                 }
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
                 if (action && (typeof action == "function")) {
                     if (theme === THEME_INPUT) {
                         action($("input[name='modal-input']").val());
@@ -3413,7 +3708,11 @@ var paper = {
             }
             $(".paper-modal .paper-radio").click(function(){
                 var value = $(this).find("h4").html();
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
                 if (action && (typeof action == "function")) {
                     if (theme === THEME_INPUT) {
                         action(value);
@@ -3426,7 +3725,7 @@ var paper = {
 
         var show = function () {
             $(".paper-modal").addClass("paper-show");
-        }
+        };
 
         var destroy = function () {
             $(".paper-modal").removeClass("paper-show");
@@ -3504,14 +3803,6 @@ var paper = {
             $(tthis).remove();
         }, 200);
     });
-
-    /**
-     * Material Snackbar and Toast Framework
-     * @type {{version: number}}
-     */
-    paper["snackbar-toast"] = {
-        version: 0.01
-    };
 
     /**
      * Create and show snackbar

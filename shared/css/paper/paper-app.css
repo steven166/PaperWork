@@ -112,6 +112,8 @@
     top: 0;
     bottom: 0;
 
+    overflow: hidden;
+
     transition-duration: 0.2s;
     transition-property: all;
 }
@@ -170,7 +172,7 @@
     bottom: 5%;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.227451) 0px 6px 10px 0px, rgba(0, 0, 0, 0.188235) 0px 10px 30px 0px;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
 }
 
 .material-app .paper-overlay.paper-drawer .paper-activity{
@@ -298,6 +300,19 @@
 
 .material-app .activity-empty{
     text-align: center;
+}
+
+.material-app .activity-empty h1 i{
+    position: relative;
+    top: 10px;
+    margin-right: 10px;
+    font-size: 50px;
+}
+
+.material-app .activity-empty h2 i{
+    top: 4px;
+    left: -5px;
+    font-size: 20px;
 }
 
 .material-app .paper-drawer .drawer-head{

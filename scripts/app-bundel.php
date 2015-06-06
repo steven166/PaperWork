@@ -18,14 +18,14 @@ foreach($folders as $folder){
         if(count($js_files) != 0) {
             echo "(function(){\n";
             $app_file = $js_folder . "/_app.js";
-            $groups_file = $js_folder . "/_groups.js";
+            $groups_file = $js_folder . "/_init.js";
             if(file_exists($app_file) && is_file($app_file)){
                 echo trim(file_get_contents($app_file));
             }else{
                 echo "console.error(\"'_app.js' is missinging\");\n";
             }
             foreach ($js_files as $js_file) {
-                if($js_file === "_app.js" || $js_file === "_groups.js"){
+                if($js_file === "_app.js" || $js_file === "_init.js"){
                     continue;
                 }
                 $file = $js_folder . "/" . $js_file;
@@ -41,7 +41,7 @@ foreach($folders as $folder){
             if(file_exists($groups_file) && is_file($groups_file)){
                 echo trim(file_get_contents($groups_file));
             }else{
-                echo "console.error(\"'_groups.js' is missinging\");\n";
+                echo "console.error(\"'_init.js' is missinging\");\n";
             }
             echo "\n})();";
             file_put_contents($js_output, ob_get_contents());

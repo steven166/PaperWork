@@ -1,84 +1,72 @@
 
 (function () {
 
+    paper.form = {
+
+        init: function(element){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-input")){
+                if(e.children(".stat").length === 0){
+                    e.append("<div class='stat'></div>");
+                }
+                if(e.children(".stat-active").length === 0){
+                    e.append("<div class='stat-active'></div>");
+                }
+                if(e.children("label").length > 0){
+                    e.addClass("paper-label");
+                }
+            }else{
+                e.find(".paper-input").each(function(){
+                    paper.form.init(this);
+                });
+            }
+        }
+
+    }
+
     $("body").ready(function () {
-        $("body").on("keyup", ".paper-input input, .paper-input textarea", function () {
+        $("body").on("keyup, focus", ".paper-input input, .paper-input textarea", function () {
             var passed = validatePaperInput(this);
-
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            if (passed) {
-                stat.css("background-color", "#2196F3");
-                label.css("color", "#2196F3");
-            } else {
-                stat.css("background-color", "#E87C71");
-                label.css("color", "#E87C71");
-            }
-        });
-
-        $("body").on("focus", ".paper-input input, .paper-input textarea", function () {
-            var passed = validatePaperInput(this);
-
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            label.addClass("selected");
-            if (passed) {
-                stat.css("background-color", "#2196F3");
-                label.css("color", "#2196F3");
-            } else {
-                stat.css("background-color", "#F44336");
-                label.css("color", "#F44336");
-            }
-
-            stat.css("width", stat.parent().width() - 20 + "px");
-        });
-
-        $("body").on("change focus", ".paper-input select", function () {
-            var stat = $(this).parent().children(".stat_active");
-            var label = $(this).parent().children("label");
-            if($(this).find(":selected").val() === "0"){
-                label.removeClass("selected");
+            if(passed){
+                $(this).parent().removeClass("danger");
             }else{
-                label.addClass("selected");
+                $(this).parent().addClass("danger");
             }
-            stat.css("background-color", "#2196F3");
-            label.css("color", "#2196F3");
-            stat.css("width", stat.parent().width() - 20 + "px");
         });
 
-        $("body").on("blur", ".paper-input input, .paper-input textarea", function () {
-            $(this).parent().children("label").css("color", "");
-            if ($(this).val() == null || $(this).val() == "") {
+        $("body").on("blur", ".paper-input.paper-label input, .paper-input.paper-label textarea", function () {
+            var val = $(this).val();
+            if(val === "" || val === null){
                 $(this).parent().children("label").removeClass("selected");
-            }
-            $(this).parent().children(".stat_active").css("width", "");
-        });
-        
-        $("body").on("blur", ".paper-input select", function(){
-            $(this).parent().children("label").css("color", "");
-            var label = $(this).parent().children("label");
-            if($(this).find(":selected").val() === "0"){
-                label.removeClass("selected");
             }else{
-                label.addClass("selected");
-            }
-            $(this).parent().children(".stat_active").css("width", "");
-        });
-
-        $(".paper-input.paper-label input, .paper-input.paper-label textarea").each(function () {
-            if ($(this).val() == null || $(this).val() == "") {
-                $(this).parent().children("label").removeClass("selected");
-            } else {
                 $(this).parent().children("label").addClass("selected");
             }
         });
 
-        $(".paper-input").each(function () {
-            if ($(this).children(".stat").length == 0) {
-                $(this).append("<div class='stat'></div>");
+        $("body").on("click", ".paper-input.paper-label label", function(){
+            $(this).parent().children("input, textarea, select").focus();
+        });
+
+        $("body").on("change focus", ".paper-input select", function () {
+            var label = $(this).parent().children("label");
+            if($(this).find(":selected").val() === "0"){
+                label.removeClass("selected");
+            }else{
+                label.addClass("selected");
             }
-            if ($(this).children(".stat_active").length == 0) {
-                $(this).append("<div class='stat_active'></div>");
+            $(this).removeClass("danger");
+        });
+        
+        $("body").on("blur", ".paper-input select", function(){
+            var label = $(this).parent().children("label");
+            if($(this).find(":selected").val() === "0"){
+                label.removeClass("selected");
+            }else{
+                label.addClass("selected");
             }
         });
     });

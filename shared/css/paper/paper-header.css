@@ -30,14 +30,16 @@
     float: left;
     z-index: 1;
 
-    width: 59px;
-    height: 64px;
-    padding: 18px 13px 18px 18px;
+
+    width: 80px;
+    height: 80px;
+    top: -8px;
+    left: -8px;
+    padding: 24px 24px 24px 24px;
 
     font-size: 28px;
     line-height: 28px;
-    border-top-right-radius: 32px;
-    border-bottom-right-radius: 32px;
+    border-radius: 100%;
     cursor: pointer;
     opacity: 1;
     transition-duration: 0.2s;
@@ -47,7 +49,7 @@
 .paper-header .left-action .icon .bar-container{
     position: absolute;
     left: 0;
-    right: -5px;
+    right: 0px;
     top: 0;
     bottom: 0;
     transform: rotate(0deg);
@@ -64,7 +66,7 @@
 
     width: 20px;
     height: 2px;
-    left: 22px;
+    left: 30px;
 
     border-radius: 1px;
     opacity: 0;
@@ -75,10 +77,10 @@
 
 .paper-header .left-action .icon i{
     position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 3px;
-    bottom: 8px;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
 
     padding: 10px;
     background-repeat: no-repeat;
@@ -102,15 +104,15 @@
 }
 
 .paper-header .left-action .icon .bar:nth-child(1) {
-    top: 25px;
+    top: 33px;
 }
 
 .paper-header .left-action .icon .bar:nth-child(2) {
-    top: 31px;
+    top: 39px;
 }
 
 .paper-header .left-action .icon .bar:nth-child(3) {
-    top: 37px;
+    top: 45px;
 }
 
 .paper-header .left-action .icon.action-back .bar-container {
@@ -119,19 +121,19 @@
 
 .paper-header .left-action .icon.action-back .bar:nth-child(1) {
     width: 13px;
-    left: 31px;
-    top: 27px;
+    left: 39px;
+    top: 35px;
     transform: rotate(45deg);
 }
 
 .paper-header .left-action .icon.action-back .bar:nth-child(2) {
-    top: 31px;
+    top: 39px;
 }
 
 .paper-header .left-action .icon.action-back .bar:nth-child(3) {
     width: 13px;
-    left: 31px;
-    top: 35px;
+    left: 39px;
+    top: 43px;
     transform: rotate(-45deg);
 }
 
@@ -173,10 +175,10 @@
 .paper-header .action-bar .action{
     position: relative;
     display: inline-block;
-    width: 48px;
-    height: 48px;
-    margin: 8px 8px 8px 0px;
-    padding: 10px;
+    width: 56px;
+    height: 56px;
+    margin: 4px 0px 4px 0px;
+    padding: 14px;
     transform: scale(1);
     border-radius: 48px;
     cursor: pointer;

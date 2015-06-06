@@ -1,0 +1,395 @@
+.theme-red .paper-input.paper-label *:focus + label{
+    color: #F44336;
+}
+
+.theme-red .paper-input .stat-active{
+    background-color: #F44336;
+}
+
+.theme-pink .paper-input.paper-label *:focus + label{
+    color: #E91E63;
+}
+
+.theme-pink .paper-input .stat-active{
+    background-color: #E91E63;
+}
+
+.theme-purple .paper-input.paper-label *:focus + label{
+    color: #9C27B0;
+}
+
+.theme-purple .paper-input .stat-active{
+    background-color: #9C27B0;
+}
+
+.theme-deep-purple .paper-input.paper-label *:focus + label{
+    color: #673AB7;
+}
+
+.theme-deep-purple .paper-input .stat-active{
+    background-color: #673AB7;
+}
+
+.theme-indigo .paper-input.paper-label *:focus + label{
+    color: #3F51B5;
+}
+
+.theme-indigo .paper-input .stat-active{
+    background-color: #3F51B5;
+}
+
+.theme-blue .paper-input.paper-label *:focus + label{
+    color: #2196F3;
+}
+
+.theme-blue .paper-input .stat-active{
+    background-color: #2196F3;
+}
+
+.theme-light-blue .paper-input.paper-label *:focus + label{
+    color: #03A9F4;
+}
+
+.theme-light-blue .paper-input .stat-active{
+    background-color: #03A9F4;
+}
+
+.theme-cyan .paper-input.paper-label *:focus + label{
+    color: #00BCD4;
+}
+
+.theme-cyan .paper-input .stat-active{
+    background-color: #00BCD4;
+}
+
+.theme-teal .paper-input.paper-label *:focus + label{
+    color: #009688;
+}
+
+.theme-teal .paper-input .stat-active{
+    background-color: #009688;
+}
+
+.theme-green .paper-input.paper-label *:focus + label{
+    color: #4CAF50;
+}
+
+.theme-green .paper-input .stat-active{
+    background-color: #4CAF50;
+}
+
+.theme-light-green .paper-input.paper-label *:focus + label{
+    color: #8BC34A;
+}
+
+.theme-light-green .paper-input .stat-active{
+    background-color: #8BC34A;
+}
+
+.theme-lime .paper-input.paper-label *:focus + label{
+    color: #CDDC39;
+}
+
+.theme-lime .paper-input .stat-active{
+    background-color: #CDDC39;
+}
+
+.theme-yellow .paper-input.paper-label *:focus + label{
+    color: #FFEB3B;
+}
+
+.theme-yellow .paper-input .stat-active{
+    background-color: #FFEB3B;
+}
+
+.theme-amber .paper-input.paper-label *:focus + label{
+    color: #FFC107;
+}
+
+.theme-amber .paper-input .stat-active{
+    background-color: #FFC107;
+}
+
+.theme-orange .paper-input.paper-label *:focus + label{
+    color: #FF9800;
+}
+
+.theme-orange .paper-input .stat-active{
+    background-color: #FF9800;
+}
+
+.theme-deep-orange .paper-input.paper-label *:focus + label{
+    color: #FF5722;
+}
+
+.theme-deep-orange .paper-input .stat-active{
+    background-color: #FF5722;
+}
+
+.theme-brown .paper-input.paper-label *:focus + label{
+    color: #795548;
+}
+
+.theme-brown .paper-input .stat-active{
+    background-color: #795548;
+}
+
+.theme-gray .paper-input.paper-label *:focus + label{
+    color: #9E9E9E;
+}
+
+.theme-gray .paper-input .stat-active{
+    background-color: #9E9E9E;
+}
+
+.theme-dark-gray .paper-input.paper-label *:focus + label{
+    color: #333333;
+}
+
+.theme-dark-gray .paper-input .stat-active{
+    background-color: #333333;
+}
+
+.theme-light-gray .paper-input.paper-label *:focus + label{
+    color: #CCCCCC;
+}
+
+.theme-light-gray .paper-input .stat-active{
+    background-color: #CCCCCC;
+}
+
+.theme-blue-gray .paper-input.paper-label *:focus + label{
+    color: #607D8B;
+}
+
+.theme-blue-gray .paper-input .stat-active{
+    background-color: #607D8B;
+}
+
+.theme-black .paper-input.paper-label *:focus + label{
+    color: black;
+}
+
+.theme-black .paper-input .stat-active{
+    background-color: black;
+}
+
+.theme-white .paper-input.paper-label *:focus + label{
+    color: white;
+}
+
+.theme-white .paper-input .stat-active{
+    background-color: white;
+}
+
+.theme-red .paper-input.paper-label.danger label{
+    color: #FF9800;
+}
+
+.theme-red .paper-input.danger .stat-active{
+    background-color: #FF9800;
+}
+
+.paper-input.paper-label.red *:focus + label{
+     color: #F44336;
+ }
+
+.paper-input.red .stat-active{
+    background-color: #F44336;
+}
+
+.paper-input.paper-label.pink *:focus + label{
+    color: #E91E63;
+}
+
+.paper-input.pink .stat-active{
+    background-color: #E91E63;
+}
+
+.paper-input.paper-label.purple *:focus + label{
+    color: #9C27B0;
+}
+
+.paper-input.purple .stat-active{
+    background-color: #9C27B0;
+}
+
+.paper-input.paper-label.deep-purple *:focus + label{
+    color: #673AB7;
+}
+
+.paper-input.deep-purple .stat-active{
+    background-color: #673AB7;
+}
+
+.paper-input.paper-label.indigo *:focus + label{
+    color: #3F51B5;
+}
+
+.paper-input.indigo .stat-active{
+    background-color: #3F51B5;
+}
+
+.paper-input.paper-label.blue *:focus + label{
+    color: #2196F3;
+}
+
+.paper-input.blue .stat-active{
+    background-color: #2196F3;
+}
+
+.paper-input.paper-label.light-blue *:focus + label{
+    color: #03A9F4;
+}
+
+.paper-input.light-blue .stat-active{
+    background-color: #03A9F4;
+}
+
+.paper-input.paper-label.cyan *:focus + label{
+    color: #00BCD4;
+}
+
+.paper-input.cyan .stat-active{
+    background-color: #00BCD4;
+}
+
+.paper-input.paper-label.teal *:focus + label{
+    color: #009688;
+}
+
+.paper-input.teal .stat-active{
+    background-color: #009688;
+}
+
+.paper-input.paper-label.green *:focus + label{
+    color: #4CAF50;
+}
+
+.paper-input.green .stat-active{
+    background-color: #4CAF50;
+}
+
+.paper-input.paper-label.light-green *:focus + label{
+    color: #8BC34A;
+}
+
+.paper-input.light-green .stat-active{
+    background-color: #8BC34A;
+}
+
+.paper-input.paper-label.lime *:focus + label{
+    color: #CDDC39;
+}
+
+.paper-input.lime .stat-active{
+    background-color: #CDDC39;
+}
+
+.paper-input.paper-label.yellow *:focus + label{
+    color: #FFEB3B;
+}
+
+.paper-input.yellow .stat-active{
+    background-color: #FFEB3B;
+}
+
+.paper-input.paper-label.amber *:focus + label{
+    color: #FFC107;
+}
+
+.paper-input.amber .stat-active{
+    background-color: #FFC107;
+}
+
+.paper-input.paper-label.orange *:focus + label{
+    color: #FF9800;
+}
+
+.paper-input.orange .stat-active{
+    background-color: #FF9800;
+}
+
+.paper-input.paper-label.deep-orange *:focus + label{
+    color: #FF5722;
+}
+
+.paper-input.deep-orange .stat-active{
+    background-color: #FF5722;
+}
+
+.paper-input.paper-label.brown *:focus + label{
+    color: #795548;
+}
+
+.paper-input.brown .stat-active{
+    background-color: #795548;
+}
+
+.paper-input.paper-label.gray *:focus + label{
+    color: #9E9E9E;
+}
+
+.paper-input.gray .stat-active{
+    background-color: #9E9E9E;
+}
+
+.paper-input.paper-label.dark-gray *:focus + label{
+    color: #333333;
+}
+
+.paper-input.dark-gray .stat-active{
+    background-color: #333333;
+}
+
+.paper-input.paper-label.light-gray *:focus + label{
+    color: #CCCCCC;
+}
+
+.paper-input.light-gray .stat-active{
+    background-color: #CCCCCC;
+}
+
+.paper-input.paper-label.blue-gray *:focus + label{
+    color: #607D8B;
+}
+
+.paper-input.blue-gray .stat-active{
+    background-color: #607D8B;
+}
+
+.paper-input.paper-label.black *:focus + label{
+    color: black;
+}
+
+.paper-input.black .stat-active{
+    background-color: black;
+}
+
+.paper-input.paper-label.white *:focus + label{
+    color: white;
+}
+
+.paper-input.white .stat-active{
+    background-color: white;
+}
+
+.paper-input.paper-label.danger label{
+    color: #FF9800;
+}
+
+.paper-input.danger .stat-active{
+    background-color: #FF9800;
+}
+
+.paper-input.paper-label.danger.red label{
+    color: #FF9800;
+}
+
+.paper-input.danger.red .stat-active{
+    background-color: #FF9800;
+}
+
+.paper-input{
+    background: none;
+}

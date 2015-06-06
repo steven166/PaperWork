@@ -1,0 +1,29 @@
+<template activity="settings">
+    <ul class="paper-list">
+        <li class="wrippels sep-bottom medium push-left" id="setting-action-general">
+            <div class="icon fg-teal"><i class="mdi-action-settings"></i></div>
+            <div class="title" lang-key="general"></div>
+        </li>
+        <li class="wrippels sep-bottom medium push-left" id="setting-action-about">
+            <div class="icon fg-teal"><i class="mdi-action-info-outline"></i></div>
+            <div class="title" lang-key="about"></div>
+        </li>
+    </ul>
+</template>
+<script>
+    app.activity("settings", function(){
+
+        $("body").on("click", "[activity=settings] #setting-action-general", function(){
+            setTimeout(function(){
+                app.goToActivity("settings-general", 2);
+            }, 300);
+        });
+
+        $("body").on("click", "[activity=settings] #setting-action-about", function(){
+            setTimeout(function(){
+                app.goToActivity("settings-about", 2);
+            }, 300);
+        });
+
+    });
+</script>

@@ -5,7 +5,7 @@
         console.error("\'paper-modal\' dependence on \'paper\'");
     }
 
-    paper.modal = {
+    paper.alert = {
 
         info: function (title, message, func, btnText) {
             paperPop(func, THEME_INFO, title, message, false, btnText);
@@ -94,15 +94,28 @@
             installListeners();
             show();
         }, 10);
+        if(typeof(paper.app) !== "undefined"){
+            paper.app.routingManager.pushCustomState(function(){
+                destroy();
+            });
+        }
 
         var FADE_TIME = 500;
 
         var installListeners = function () {
             $(".paper-modal-overlay").click(function () {
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
             });
             $(".paper-modal .paper-modal-footer .d-button").click(function () {
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
             });
             $(".paper-modal .paper-modal-footer .actionbtn").click(function () {
                 if (theme === THEME_INPUT && $("input[name='modal-input']").prop('required')) {
@@ -115,7 +128,11 @@
                         return;
                     }
                 }
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
                 if (action && (typeof action == "function")) {
                     if (theme === THEME_INPUT) {
                         action($("input[name='modal-input']").val());
@@ -129,7 +146,11 @@
             }
             $(".paper-modal .paper-radio").click(function(){
                 var value = $(this).find("h4").html();
-                destroy();
+                if(typeof(paper.app) !== "undefined"){
+                    history.back();
+                }else{
+                    destroy();
+                }
                 if (action && (typeof action == "function")) {
                     if (theme === THEME_INPUT) {
                         action(value);
@@ -142,7 +163,7 @@
 
         var show = function () {
             $(".paper-modal").addClass("paper-show");
-        }
+        };
 
         var destroy = function () {
             $(".paper-modal").removeClass("paper-show");
