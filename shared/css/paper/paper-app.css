@@ -266,6 +266,10 @@
     transition-property: all;
 }
 
+.material-app .paper-activity:last-child .activity-frame {
+    border-right: none;
+}
+
 @media (max-width: 720px) {
     .material-app .paper-activity .activity-frame {
         border: none;

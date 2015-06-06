@@ -1,51 +1,51 @@
 <template activity="index-panel">
     <style>
-        .activity-body{
+        [activity=index-panel] .activity-body{
             text-align: center;
         }
 
-        .paper-list{
+        [activity=index-panel] .paper-list{
             overflow: initial;
             height: auto;
             text-align: left;
         }
 
-        .paper-list .title.sub b{
+        [activity=index-panel] .paper-list .title.sub b{
             position: relative;
             top: -2px;
             font-weight: bold;
         }
 
-        .paper-list .title.sub span{
+        [activity=index-panel] .paper-list .title.sub span{
             float:right;
         }
 
-        .bottom-wrapper{
+        [activity=index-panel] .bottom-wrapper{
             position: relative;
             height: 40px;
             width: 100%;
         }
 
-        .list-more{
+        [activity=index-panel] .list-more{
             position: absolute;
             left: 0;
             width: 100%;
             margin: 0;
         }
 
-        .paper-loading{
+        [activity=index-panel] .paper-loading{
             position: absolute;
             display: inline-block;
             left: 50%;
             margin-left: -16px;
         }
 
-        .list-more, .paper-loading{
+        [activity=index-panel] .list-more, .paper-loading{
             opacity: 1;
             transition: 0.2s opacity;
         }
 
-        .list-more.fade, .paper-loading.fade{
+        [activity=index-panel] .list-more.fade, .paper-loading.fade{
             opacity: 0;
             cursor: default;
         }

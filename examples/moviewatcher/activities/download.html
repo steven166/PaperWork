@@ -1,13 +1,13 @@
 <template activity="download">
     <style>
-        .paper-header .title{
+        [activity=download] .paper-header .title{
             right: 64px;
         }
-        .paper-list li .title.main{
+        [activity=download] .paper-list li .title.main{
             font-size: 16px;
         }
 
-        .paper-list li .title.sub > *{
+        [activity=download] .paper-list li .title.sub > *{
             display: inline-block;
             font-weight: bold;
             width: 100px;
@@ -31,7 +31,7 @@
 
         this.onCreate = function(eActivity, invokeArg){
 
-            var getter = this.get("http://82.176.111.248:50080/services/download-service.php", {imdb: invokeArg});
+            var getter = this.get("services/download-service.php", {imdb: invokeArg});
 
             //var getter = $.get("http://82.176.111.248:50080/services/download-service.php", {imdb: invokeArg});
             getter.done(function(json){
@@ -57,7 +57,7 @@
                             $("<b class='" + color + "'>" + item.res + "</b>").appendTo(subTitle);
                         }
                         li.click(function(){
-                            paper.modal.question("Open magnet link", "Open 'magnet://' protocol", function(){
+                            paper.alert.question("Open magnet link", "Open 'magnet://' protocol", function(){
                                 location.href = item.link;
                             }, "Open link", "Cancel");
                         });

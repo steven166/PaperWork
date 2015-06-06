@@ -4,7 +4,7 @@
  */
 var paper = {
 
-    version: "0.1.0",
+    version: "0.1.1",
 
     /**
      * Predefined Colors
@@ -44,7 +44,7 @@ var paper = {
     /**
      * List of all modules
      */
-    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading"],
+    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading", "progress"],
 
     /**
      * Get list of installed modules
@@ -129,6 +129,7 @@ var paper = {
     $(window).load(function(){
         paper.loaded = true;
         console.info("Installed modules: " + paper.getInstalledModules());
+        paper.initModules();
         $(".paper-startup").fadeOut(200, function(){
             $(this).remove();
         });

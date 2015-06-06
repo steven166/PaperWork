@@ -11,7 +11,8 @@ $modules = array(
     "paper-checkbox",
     "paper-lang",
     "paper-alert",
-    "paper-snackbar-toast"
+    "paper-snackbar-toast",
+    "paper-progress"
 );
 
 ob_start();

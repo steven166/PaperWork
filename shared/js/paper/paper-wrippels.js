@@ -72,11 +72,11 @@
         var html = "<div class='" + cls + "' style='width: " + size + "px; height: " + size + "px; top: " + y + "px; left: " + x + "px;'/>";
         var overlay = $(html).appendTo(tthis);
         setTimeout(function () {
-            var tick = 0;
+            var tick = 5;
             var interval = window.setInterval(function () {
-                tick++;
+                tick += 3;
                 var scale = tick / 100;
-                overlay.css("transform", "scale(" + scale + "," + scale + ")");
+                overlay.css("transform", "scale(" + scale + ")");
                 if (overlay.hasClass("wrippel-expand")) {
                     overlay.css("transform", "");
                     window.clearInterval(interval);
@@ -108,8 +108,10 @@
     //    $("body").on("touchend, mouseup, blur, click", ".wrippels", mouseUp);
     //    $("body").on("touchmove", ".wrippels", mouseUp);
     //} else {
+    $("body").ready(function(){
         $("body").on("mousedown", ".wrippels:not(.touchonly)", mouseDown);
         $("body").on("mouseup, blur, click", ".wrippels:not(.touchonly)", mouseUp);
         $("body").on("mousemove", ".wrippels:not(.touchonly)", mouseUp);
+    });
     //}
 })();

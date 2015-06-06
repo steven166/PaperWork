@@ -223,19 +223,19 @@ h1, h2, h3, h4, h5, h6{
     position: absolute;
     z-index: 1;
 
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255,255,255,0.2);
     border-radius: 100%;
 
     transform-origin: center;
-    transform: scale(0,0);
+    transform: scale(0.05);
 }
 
 .wrippels > .overlay.dark{
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.2);
 }
 
 .wrippels > .overlay.wrippel-ani{
-    transition: 0.5s transform cubic-bezier(.4,0,.2,1), 0.5s opacity cubic-bezier(.4,0,.2,1), 0.3s all cubic-bezier(.4,0,.2,1);
+    transition: 0.5s transform linear, 0.5s opacity cubic-bezier(.4,0,.2,1), 0.3s all cubic-bezier(.4,0,.2,1);
 }
 
 .wrippels > .overlay.wrippel-expand{
@@ -887,6 +887,10 @@ h1, h2, h3, h4, h5, h6{
     transform: scale(1);
     transition-duration: 0.5s;
     transition-property: all;
+}
+
+.material-app .paper-activity:last-child .activity-frame {
+    border-right: none;
 }
 
 @media (max-width: 720px) {

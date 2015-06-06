@@ -1886,7 +1886,6 @@
                     }
                     if(same){
                         console.debug("routing -> [LOCATION SAME]");
-                        //TODO: remove popup history
                         for(var i = 0; i < popupsShouldClose; i++){
                             if(oldUrls.length >= 3) {
                                 var closeUrl = oldUrls[oldUrls.length - 1];

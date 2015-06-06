@@ -44,7 +44,7 @@ var paper = {
     /**
      * List of all modules
      */
-    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading"],
+    modules: ["app", "checkbox", "radio", "header", "input", "lang", "list", "alert", "snackbar", "toast", "wrippels", "loading", "progress"],
 
     /**
      * Get list of installed modules
@@ -129,6 +129,7 @@ var paper = {
     $(window).load(function(){
         paper.loaded = true;
         console.info("Installed modules: " + paper.getInstalledModules());
+        paper.initModules();
         $(".paper-startup").fadeOut(200, function(){
             $(this).remove();
         });
@@ -270,11 +271,11 @@ var paper = {
         var html = "<div class='" + cls + "' style='width: " + size + "px; height: " + size + "px; top: " + y + "px; left: " + x + "px;'/>";
         var overlay = $(html).appendTo(tthis);
         setTimeout(function () {
-            var tick = 0;
+            var tick = 5;
             var interval = window.setInterval(function () {
-                tick++;
+                tick += 3;
                 var scale = tick / 100;
-                overlay.css("transform", "scale(" + scale + "," + scale + ")");
+                overlay.css("transform", "scale(" + scale + ")");
                 if (overlay.hasClass("wrippel-expand")) {
                     overlay.css("transform", "");
                     window.clearInterval(interval);
@@ -306,9 +307,11 @@ var paper = {
     //    $("body").on("touchend, mouseup, blur, click", ".wrippels", mouseUp);
     //    $("body").on("touchmove", ".wrippels", mouseUp);
     //} else {
+    $("body").ready(function(){
         $("body").on("mousedown", ".wrippels:not(.touchonly)", mouseDown);
         $("body").on("mouseup, blur, click", ".wrippels:not(.touchonly)", mouseUp);
         $("body").on("mousemove", ".wrippels:not(.touchonly)", mouseUp);
+    });
     //}
 })();
 (function(){
@@ -2963,7 +2966,6 @@ var paper = {
                     }
                     if(same){
                         console.debug("routing -> [LOCATION SAME]");
-                        //TODO: remove popup history
                         for(var i = 0; i < popupsShouldClose; i++){
                             if(oldUrls.length >= 3) {
                                 var closeUrl = oldUrls[oldUrls.length - 1];
