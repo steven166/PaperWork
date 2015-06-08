@@ -25,6 +25,7 @@
 
     <!--Language files -->
     <script src="lang/en.js"></script>
+    <script src="lang/nl.js"></script>
 
     <!-- Create app -->
     <script src="js/_app.js"></script>

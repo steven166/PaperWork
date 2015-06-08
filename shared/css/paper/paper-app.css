@@ -262,11 +262,13 @@
     border-right: rgb(233, 233, 233) solid 1px;
     opacity: 1;
     transform: scale(1);
-    transition-duration: 0.5s;
-    transition-property: all;
+    transition-duration: 0.5s, 0s;
+    transition-property: all, border-right;
 }
 
-.material-app .paper-activity:last-child .activity-frame {
+.material-app .paper-activity[pos='oox'] .activity-frame,
+.material-app .paper-activity[pos='oxx'] .activity-frame,
+.material-app .paper-activity[pos='xxx'] .activity-frame{
     border-right: none;
 }
 
@@ -320,10 +322,6 @@
 }
 
 .material-app .paper-drawer .drawer-head{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     height: 150px;
 
     background-repeat: no-repeat;
@@ -339,7 +337,7 @@
 }
 
 .material-app .paper-drawer .drawer-container{
-    padding-top: 150px;
+
 }
 
 .paper-col-1{
@@ -347,6 +345,10 @@
     position: relative;
     float: left;
     width: 33.33vw;
+}
+
+.paper-col-1.center{
+    margin-left: 33.33vw;
 }
 
 .paper-col-1-5{
@@ -380,6 +382,17 @@
 }
 
 @media(max-width: 1080px){
+    .paper-col-1{
+        display: inline-block;
+        position: relative;
+        float: left;
+        width: 50vw;
+    }
+
+    .paper-col-1.center{
+        margin-left: 25vw;
+    }
+
     .paper-col-2 {
         width: 100%;
     }
@@ -399,4 +412,19 @@
     .paper-col-1-5.center{
         margin-left: 0;
     }
+}
+
+@media(max-width: 720px){
+
+    .paper-col-1{
+        display: inline-block;
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+
+    .paper-col-1.center{
+        margin-left: 0vw;
+    }
+
 }

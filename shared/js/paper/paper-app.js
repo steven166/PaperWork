@@ -866,7 +866,9 @@
             activityFrame.attr("bg", "light");
 
             //Add content from the activity it self
-            var content = activity.content.clone().removeClass("activity-hide");
+            var clone = activity.content.clone();
+            var content = $("<div></div>");
+            content.html(clone.html());
             content.addClass("activity-body").addClass("fade");
             content.attr("id", "body-" + activity.id);
             content.removeAttr("activity");
@@ -1027,6 +1029,27 @@
             return;
         }
         console.info("init app");
+        if (!("import" in document.createElement("link"))) {
+            // HTML5 Imports not supported
+            // Do it manually
+            $.holdReady(true);
+            var importsTodo = 0;
+            $("link[rel='import']").each(function(){
+                importsTodo++;
+                var url = $(this).attr("href");
+                var getter = $.get(url);
+                getter.done(function(data){
+                    $("body").append(data);
+                });
+                getter.always(function(){
+                    importsTodo--;
+                    if(importsTodo == 0){
+                        $.holdReady(false);
+                    }
+                });
+            });
+        }
+
         this.isInit = true;
         var app = this;
         appTitle = app.title;
@@ -1046,28 +1069,29 @@
 
         this.element = materialApp;
 
-        // Call activities
-        for(var key in app.activities){
-            var prop = app.activities[key];
-            var object = new prop["class"]();
-
-            object.content = prop.content;
-            object.id = prop.id;
-            object.visible = false;
-            object.isLoaded = false;
-            object.post = paper.app.post;
-            object.get = paper.app.get;
-            object.ajax = paper.app.ajax;
-            object.ajaxRegister = [];
-
-            app.activities[key] = object;
-        }
-
         var showApp = function(){
+            // Call activities
+            console.info("init activities");
+            for(var key in app.activities){
+                var prop = app.activities[key];
+                var object = new prop["class"]();
+
+                object.content = prop.content;
+                object.id = prop.id;
+                object.visible = false;
+                object.isLoaded = false;
+                object.post = paper.app.post;
+                object.get = paper.app.get;
+                object.ajax = paper.app.ajax;
+                object.ajaxRegister = [];
+
+                app.activities[key] = object;
+            }
+
             //Get content from imports
             var importedHtml = [];
             $("link[rel='import']").each(function(){
-                if(this.import !== null) {
+                if(this.import !== null && typeof(this.import) !== "undefined") {
                     var template = $(this.import.querySelector("template"));
                     if (template.length > 0) {
                         importedHtml.push(template);
@@ -1123,13 +1147,9 @@
             }, 20);
         };
 
-        if(paper.loaded){
+        $("body").ready(function(){
             showApp();
-        }else{
-            $(window).load(function(){
-                showApp();
-            });
-        }
+        });
     };
 
     /**

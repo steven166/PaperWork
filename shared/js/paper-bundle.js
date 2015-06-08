@@ -4,7 +4,7 @@
  */
 var paper = {
 
-    version: "0.1.0",
+    version: "0.1.1",
 
     /**
      * Predefined Colors
@@ -1946,7 +1946,9 @@ var paper = {
             activityFrame.attr("bg", "light");
 
             //Add content from the activity it self
-            var content = activity.content.clone().removeClass("activity-hide");
+            var clone = activity.content.clone();
+            var content = $("<div></div>");
+            content.html(clone.html());
             content.addClass("activity-body").addClass("fade");
             content.attr("id", "body-" + activity.id);
             content.removeAttr("activity");
@@ -2107,6 +2109,27 @@ var paper = {
             return;
         }
         console.info("init app");
+        if (!("import" in document.createElement("link"))) {
+            // HTML5 Imports not supported
+            // Do it manually
+            $.holdReady(true);
+            var importsTodo = 0;
+            $("link[rel='import']").each(function(){
+                importsTodo++;
+                var url = $(this).attr("href");
+                var getter = $.get(url);
+                getter.done(function(data){
+                    $("body").append(data);
+                });
+                getter.always(function(){
+                    importsTodo--;
+                    if(importsTodo == 0){
+                        $.holdReady(false);
+                    }
+                });
+            });
+        }
+
         this.isInit = true;
         var app = this;
         appTitle = app.title;
@@ -2126,28 +2149,29 @@ var paper = {
 
         this.element = materialApp;
 
-        // Call activities
-        for(var key in app.activities){
-            var prop = app.activities[key];
-            var object = new prop["class"]();
-
-            object.content = prop.content;
-            object.id = prop.id;
-            object.visible = false;
-            object.isLoaded = false;
-            object.post = paper.app.post;
-            object.get = paper.app.get;
-            object.ajax = paper.app.ajax;
-            object.ajaxRegister = [];
-
-            app.activities[key] = object;
-        }
-
         var showApp = function(){
+            // Call activities
+            console.info("init activities");
+            for(var key in app.activities){
+                var prop = app.activities[key];
+                var object = new prop["class"]();
+
+                object.content = prop.content;
+                object.id = prop.id;
+                object.visible = false;
+                object.isLoaded = false;
+                object.post = paper.app.post;
+                object.get = paper.app.get;
+                object.ajax = paper.app.ajax;
+                object.ajaxRegister = [];
+
+                app.activities[key] = object;
+            }
+
             //Get content from imports
             var importedHtml = [];
             $("link[rel='import']").each(function(){
-                if(this.import !== null) {
+                if(this.import !== null && typeof(this.import) !== "undefined") {
                     var template = $(this.import.querySelector("template"));
                     if (template.length > 0) {
                         importedHtml.push(template);
@@ -2203,13 +2227,9 @@ var paper = {
             }, 20);
         };
 
-        if(paper.loaded){
+        $("body").ready(function(){
             showApp();
-        }else{
-            $(window).load(function(){
-                showApp();
-            });
-        }
+        });
     };
 
     /**
@@ -3884,5 +3904,86 @@ var paper = {
 
         return $(toast);
     };
+
+})();
+(function(){
+
+    paper.progress = {
+
+        /**
+         * Find and initialze 'paper-progress' elements
+         * @param element - rootElement to initialize (default is body)
+         */
+        init: function(element){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-progress")){
+                if(e.find(".container").length === 0){
+                    e.append("<div class='container'></div>");
+                }
+                if(e.find(".bar").length === 0){
+                    e.append("<div class='bar'></div>");
+                }
+                paper.progress.update(e);
+            }else{
+                e.find(".paper-progress").each(function(){
+                    paper.progress.init($(this));
+                });
+            }
+        },
+
+        /**
+         * Update paper-progress, check new value and type
+         * @param element - rootElement to update (default is body)
+         * @param value - new value (0 - 100)
+         */
+        update: function(element, value){
+            if(typeof(element) === "undefined"){
+                var e = $("body");
+            }else{
+                var e = $(element);
+            }
+            if(e.hasClass("paper-progress")){
+                var type = "determinate";
+                var attr = e.attr("type");
+                if(attr === "indeterminate"){
+                    type = attr;
+                }else if(attr === "reverse-indeterminate"){
+                    type = attr;
+                }else {
+                    e.attr("type", attr);
+                    var v = value;
+                    if (typeof(value) !== "undefined") {
+                        e.attr("value", value);
+                    } else {
+                        v = e.attr("value");
+                    }
+                    if (typeof(v) === "undefined") {
+                        v = 0;
+                    }
+                    try {
+                        v = parseInt(v);
+                    } catch (e) {
+                        v = 0;
+                    }
+                    if (v > 100) {
+                        v = 100;
+                    }
+                    v = 100 - v;
+                    e.find(".bar").css("right", v + "%");
+                }
+            }else{
+                e.find(".paper-progress").each(function(){
+                    paper.progress.update($(this));
+                });
+            }
+        }
+
+    };
+
+
 
 })();

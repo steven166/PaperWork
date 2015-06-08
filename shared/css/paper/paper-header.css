@@ -53,6 +53,7 @@
     top: 0;
     bottom: 0;
     transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
     transition-duration: 0.5s;
     transition-property: transform;
 }
@@ -71,6 +72,7 @@
     border-radius: 1px;
     opacity: 0;
     transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
     transition-duration: 0.5s, 0s;
     transition-property: all, background-color;
 }
@@ -117,6 +119,7 @@
 
 .paper-header .left-action .icon.action-back .bar-container {
     transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
 }
 
 .paper-header .left-action .icon.action-back .bar:nth-child(1) {
@@ -124,6 +127,7 @@
     left: 39px;
     top: 35px;
     transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
 .paper-header .left-action .icon.action-back .bar:nth-child(2) {
@@ -135,6 +139,7 @@
     left: 39px;
     top: 43px;
     transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
 }
 
 .paper-header .left-action .title {

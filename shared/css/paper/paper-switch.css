@@ -1,0 +1,41 @@
+
+.paper-switch-container{
+    position: relative;
+
+    width: 36px;
+    height: 14px;
+}
+
+.paper-switch-container .bar{
+    width: 100%;
+    height: 100%;
+
+    border-radius: 7px;
+    background-color: black;
+    opacity: 0.4;
+    transition: background-color linear .08s;
+}
+
+.paper-switch-container .dot{
+    position: absolute;
+    width: 48px;
+    height: 48px;
+
+    border-radius: 100%;
+}
+
+.paper-switch-container .dot::before{
+    content: " ";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 14px;
+    left: 14px;
+    background-color: white;
+    border-radius: 100%;
+    transition: background-color linear .08s;
+}
+
+.paper-switch{
+    display: none;
+}
